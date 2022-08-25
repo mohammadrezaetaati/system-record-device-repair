@@ -30,7 +30,8 @@ def create_work_order_number(work_order_number, date_string=g_to_p()) -> str:
     If there is a work order number. One adds to the end of it.
     """
 
-    if not work_order_number or int(date_string[:4]) > int(work_order_number[:4]):
+    if not work_order_number \
+        or int(date_string[:4]) > int(work_order_number[:4]):
         last_chr = 0
     else:
         last_chr = work_order_number[len(work_order_number) - 1:]

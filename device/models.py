@@ -4,7 +4,7 @@ from django.db import models
 from django.conf import settings
 
 
-import device.function
+import device.functions
 
 
 class Category(models.Model):

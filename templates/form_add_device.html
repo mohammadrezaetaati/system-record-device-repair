@@ -53,7 +53,7 @@
                     </div>
                     <div class="x_content">
 
-                        <form class="form-horizontal form-label-left" novalidate method="post" action="{%url 'add-tools'%}">
+                        <form class="form-horizontal form-label-left" novalidate method="post" action="{%url 'add-device'%}">
                             {% csrf_token %}
                             {% if form.errors %}
                                  <center><h3 style="color: red;">لطفا تمامی فیلد ها را پرکنید!</h3></center>
@@ -65,8 +65,8 @@
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                      <select id="heard" class="form-control" required=""  searchable="Search here.."  name="category">
-                                     {% if tools %}
-                                        <option value={{tools.category}}>{{tools.category}}</option>
+                                     {% if device %}
+                                        <option value={{device.category}}>{{device.category}}</option>
                                      {% else %}
                                      
                                         <option value="press">انتخاب..</option>
@@ -102,7 +102,7 @@
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input id="name" class="form-control col-md-7 col-xs-12"
                                            data-validate-length-range="6" data-validate-words="2" name="brand" 
-                                           placeholder="" required="required" type="text" value={{tools.brand}}>
+                                           placeholder="" required="required" type="text" value={{device.brand}}>
                                 </div>
                             
                             </div>
@@ -113,7 +113,7 @@
                                   <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input id="name" class="form-control col-md-7 col-xs-12"
                                            data-validate-length-range="6" data-validate-words="2" name="place" 
-                                           placeholder="" required="required" type="text" value={{tools.place}}>
+                                           placeholder="" required="required" type="text" value={{device.place}}>
                                 </div>
                             </div>
                             <div class="item form-group">
@@ -123,7 +123,7 @@
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input id="name" class="form-control col-md-7 col-xs-12"
                                            data-validate-length-range="6" data-validate-words="2" name="branch" 
-                                           placeholder="" required="required" type="text" value={{tools.branch}}>
+                                           placeholder="" required="required" type="text" value={{device.branch}}>
                                 </div>
                             </div>
                             <div class="item form-group">
@@ -144,7 +144,7 @@
                               <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input id="name" class="form-control col-md-7 col-xs-12"
                                            data-validate-length-range="6" data-validate-words="2" name="phone" 
-                                           placeholder="" required="required" type="text" value={{tools.phone}}>
+                                           placeholder="" required="required" type="text" value={{device.phone}}>
                                 </div>
                             </div>
                             <div class="item form-group">
