@@ -1,0 +1,256 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+
+
+
+{% block content %}       
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>اعتبارسنجی فرم</h3>
+            </div>
+
+            <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="جست و جو برای...">
+                        <span class="input-group-btn">
+                              <button class="btn btn-default" type="button">برو!</button>
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>اعتبار سنجی فرم
+                            <small>زیر عنوان</small>
+                        </h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                   aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">تنظیمات 1</a>
+                                    </li>
+                                    <li><a href="#">تنظیمات 2</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+
+                        <form class="form-horizontal form-label-left" novalidate method="post" action="{%url 'add-tools'%}">
+                            {% csrf_token %}
+                            {% if form.errors %}
+                                 <center><h3 style="color: red;">لطفا تمامی فیلد ها را پرکنید!</h3></center>
+                            {% endif %}
+                            <span class="section">اطلاعات شخصی</span>
+                            <div class="item form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">نوع وسیله <span
+                                        class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                     <select id="heard" class="form-control" required=""  searchable="Search here.."  name="category">
+                                     {% if tools %}
+                                        <option value={{tools.category}}>{{tools.category}}</option>
+                                     {% else %}
+                                     
+                                        <option value="press">انتخاب..</option>
+                                        <option value="کیس">کیس</option>
+                                        <option value="پرینتر">پرینتر</option>
+                                        <option value="لپتاب">لپتاب</option>
+                                        <option value="تلویزیون">تلویزیون</option>
+                                        <option value="مانیتور">مانیتور</option>
+                                        <option value="تلفن">تلفن</option>
+                                        <option value="محافظ برق">محافظ برق</option>
+                                        <option value="دوربین">دوربین</option>
+                                        <option value="بی سیم">بی سیم</option>
+                                        <option value="متفرقه">متفرقه</option>
+                                        {% endif %}
+                                        {% comment %} {% for cat in category %} 
+                                            
+                                            {% if forloop.last %}
+                                                
+                                            {% endif %}
+                                        {% endfor %} {% endcomment %}
+                                            
+                                    </select>
+                                </div>
+                            </div>
+    
+                          
+                          
+                            <div class="item form-group">  
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">مدل <span
+                                        class="required">*</span>
+                                </label>
+
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input id="name" class="form-control col-md-7 col-xs-12"
+                                           data-validate-length-range="6" data-validate-words="2" name="brand" 
+                                           placeholder="" required="required" type="text" value={{tools.brand}}>
+                                </div>
+                            
+                            </div>
+                            <div class="item form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">یگان <span
+                                        class="required">*</span>
+                                </label>
+                                  <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input id="name" class="form-control col-md-7 col-xs-12"
+                                           data-validate-length-range="6" data-validate-words="2" name="place" 
+                                           placeholder="" required="required" type="text" value={{tools.place}}>
+                                </div>
+                            </div>
+                            <div class="item form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">قسمت<span
+                                        class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input id="name" class="form-control col-md-7 col-xs-12"
+                                           data-validate-length-range="6" data-validate-words="2" name="branch" 
+                                           placeholder="" required="required" type="text" value={{tools.branch}}>
+                                </div>
+                            </div>
+                            <div class="item form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="occupation">تحویل دهنده 
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input id="occupation" type="text" name="delivery"
+                                           data-validate-length-range="5,20"
+                                           class="optional form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+
+                            <div class="item form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="telephone">تلفن <span
+                                        class="required">*</span>
+                                </label>
+                              <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input id="name" class="form-control col-md-7 col-xs-12"
+                                           data-validate-length-range="6" data-validate-words="2" name="phone" 
+                                           placeholder="" required="required" type="text" value={{tools.phone}}>
+                                </div>
+                            </div>
+                            <div class="item form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">معایب  <span
+                                        class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <textarea id="textarea" required="required" name="problem"
+                                              class="form-control col-md-7 col-xs-12"></textarea>
+                                </div>
+                            </div>
+                            <div class="ln_solid"></div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-3">
+                                    <button type="submit" class="btn btn-primary">انصراف</button>
+                                    <button id="send" type="submit" class="btn btn-success">ثبت</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+                         
+
+<div class="x_panel">
+    <div class="x_title">
+        <h2>فرم ثبت نام
+            <small>برای اعتبار سنجی کلیک کنید</small>
+        </h2>
+        <ul class="nav navbar-right panel_toolbox">
+            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">تنظیمات 1</a>
+                    </li>
+                    <li><a href="#">تنظیمات 2</a>
+                    </li>
+                </ul>
+            </li>
+            <li><a class="close-link"><i class="fa fa-close"></i></a>
+            </li>
+        </ul>
+        <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+
+        <!-- start form for validation -->
+        <form id="demo-form" data-parsley-validate="" novalidate="">
+            <label for="fullname">نام کامل <span class="required">*</span> :</label>
+            <input type="text" id="fullname" class="form-control" name="fullname" required="">
+
+            <label for="email">ایمیل <span class="required">*</span> :</label>
+            <input type="email" id="email" class="form-control" name="email" data-parsley-trigger="change" required="">
+
+            <label>جنسیت <span class="required">*</span>:</label>
+            <p>
+                مذکر:
+                <div class="iradio_flat-green checked" style="position: relative;"><input type="radio" class="flat" name="gender" id="genderM" value="M" checked="" required="" data-parsley-multiple="gender" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border: 0px none; opacity: 0;"></ins></div> مونث:
+                <div class="iradio_flat-green" style="position: relative;"><input type="radio" class="flat" name="gender" id="genderF" value="F" data-parsley-multiple="gender" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border: 0px none; opacity: 0;"></ins></div>
+            </p>
+
+            <label>سرگرمی (2 حداقل):</label>
+            <p style="padding: 5px;">
+                <div class="icheckbox_flat-green" style="position: relative;"><input type="checkbox" name="hobbies[]" id="hobby1" value="ski" data-parsley-mincheck="2" required="" class="flat" data-parsley-multiple="hobbies" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border: 0px none; opacity: 0;"></ins></div> اسکی
+                <br>
+
+                <div class="icheckbox_flat-green" style="position: relative;"><input type="checkbox" name="hobbies[]" id="hobby2" value="run" class="flat" data-parsley-multiple="hobbies" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border: 0px none; opacity: 0;"></ins></div>
+                دویدن
+                <br>
+
+                <div class="icheckbox_flat-green" style="position: relative;"><input type="checkbox" name="hobbies[]" id="hobby3" value="eat" class="flat" data-parsley-multiple="hobbies" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border: 0px none; opacity: 0;"></ins></div>
+                خوردن
+                <br>
+
+                <div class="icheckbox_flat-green" style="position: relative;"><input type="checkbox" name="hobbies[]" id="hobby4" value="sleep" class="flat" data-parsley-multiple="hobbies" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border: 0px none; opacity: 0;"></ins></div>
+                خوابیدن
+                <br>
+            </p><p>
+
+                <label for="heard">شنیده ایم با <span class="required">*</span>:</label>
+                <select id="heard" class="form-control" required="">
+                    <option value="">انتخاب..</option>
+                    <option value="press">اخبار</option>
+                    <option value="net">اینترنت</option>
+                    <option value="mouth">دهان به دهان</option>
+                </select>
+
+                <label for="message">پیام (20 کاراکتر حداقل، 100 حداکثر):</label>
+                <textarea id="message" required="required" class="form-control" name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-minlength-message="بیا دیگه! شما نیاز به وارد کردن حداقل 20 کاراکتر از نظر طول دارید..." data-parsley-validation-threshold="10"></textarea>
+
+                <br>
+                <span class="btn btn-primary">اعتبار سنجی فرم</span>
+
+        </p></form>
+        <!-- end form for validations -->
+
+    </div>
+</div>
+<!-- /page content -->
+<!-- /page content -->
+
+{% endblock content %}
+     
