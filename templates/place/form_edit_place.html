@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}  
+
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>کاربران
+                    <small>بعضی از نمونه ها برای شروع کار شما</small>
+                </h3>
+            </div>
+
+            <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="جست و جو برای...">
+                        <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">برو!</button>
+                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>مثال پیش‌فرض
+                            <small>کاربران</small>
+                        </h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                   aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">تنظیمات 1</a>
+                                    </li>
+                                    <li><a href="#">تنظیمات 2</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <p class="text-muted font-13 m-b-30">
+                            اکثر قابلیت های Datatable به صورت پیشفرض فعال می‌باشد، بنابراین برای استفاده از آن فقط
+                            کافیست این <code dir="ltr">$().DataTable();</code> را اجرا نمایید.
+                        </p>
+                        <table id="datatable" class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th>ردیف</th>
+                                <th>نام</th>
+                                <th>رئیس</th>
+                                <th>تاریخ ایجاد</th>
+                                <th>اداره</th>                 
+                            </tr>
+                            </thead>
+
+
+                            <tbody>
+                            <tr>
+                                <td>۱</td>
+
+                                <td>Tiger Nixon</td>
+                                <td>System Architect</td>
+                                <td>Edinburgh</td>
+                                   <td> 
+                                <center><button id="send" type="submit" class="btn btn-warning" onclick="jQuery('#formedit').slideDown(700);">ویرایش</button>
+                                <button id="send" type="submit" class="btn btn-danger" onclick="jQuery('#formDelete').slideDown(700);">حذف</button></center>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>۲</td>
+                                <td>Edinburgh</td>
+                                
+                                <td>Garrett Winters</td>
+                                <td>Accountant</td>
+                                   <td> 
+                                <center><button id="send" type="submit" class="btn btn-warning" onclick="jQuery('#formedit').slideDown(700);">ویرایش</button>
+                                <button id="send" type="submit" class="btn btn-danger" onclick="jQuery('#formDelete').slideDown(700);">حذف</button></center>
+                                </td>
+                             
+                            </tr>
+                            <tr>
+                                <td>۳</td>
+                                <td>Edinburgh</td>
+
+                                <td>Ashton Cox</td>
+                                <td>Junior Technical Author</td>
+                                <td> 
+                                <center><button id="send" type="submit" class="btn btn-warning" onclick="jQuery('#formedit').slideDown(700);reply_click(this.id)">ویرایش</button>
+                                <button id="send" type="submit" class="btn btn-danger" onclick="jQuery('#formDelete').slideDown(700);">حذف</button></center>
+                                </td>
+                             
+                            </tr>
+                      
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+     <div class="x_content">
+                    <form id="formCategory" class="form-horizontal form-label-left" novalidate method="post" action="{%url 'edit-brand-category'%}" data-brands-category-url="{% url 'ajax_load_brands-category' %}">
+                            {% csrf_token %}
+                            {% comment %} <span class="section"> ویرایش</span> {% endcomment %} 
+                            {% if error %}
+                            <center><h5 style="color: rgb(189, 25, 25);">این نام وجود دارد</h5></center>
+                
+                            {% endif %}
+                          
+                            <div class="item form-group" >
+                            </div>
+                        <div class="item form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">نام<span
+                                        class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                      <select id="SelectCategory" class="form-control" required=""  searchable="Search here.."  name="category">
+                                     <option value=''>انتخاب...</option>
+                                    {% for cat in category %}
+                                        <option value={{cat.name}}>{{cat.name}}</option>
+                                    {% endfor %}      
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                </div>
+</div>
+        </div>
+    </div>
+</div>
+
+
+{%endblock content%}   
+{%block js %}
+<script type="text/javascript">
+  function reply_click(clicked_id)
+  {
+      alert(clicked_id);
+  }
+</script>
+
+{% endblock js%}
+   
+
+
