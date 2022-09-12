@@ -128,8 +128,8 @@ class EditCategory(View):
         context={'category':Category.objects.all()}
         return render(request,'device/form_add_category.html',context=context)
 
-    def obj_exists(self,name:str) -> bool:
-        return Category.objects.filter(name=name).exists()
+    def obj_exists(self,name:str,queryset:QuerySet) -> bool:
+        return queryset.objects.filter(name=name).exists()
 
     def response(self,message:str) -> json:
         if message == 'success':
@@ -139,10 +139,10 @@ class EditCategory(View):
         else:
             return JsonResponse({'msg':'error'})
 
-    def create(self,name:str) -> json:
-        if self.obj_exists(name):
+    def create(self,name:str,queryset:QuerySet) -> json:
+        if self.obj_exists(name,queryset):
             return self.response('exists')
-        Category.objects.create(name=name)    
+        queryset.objects.create(name=name)    
         return self.response('success')
         
     def update(self,queryset:Union[QuerySet,list[Category,BrandCategory]],name_new:str):
@@ -155,7 +155,7 @@ class EditCategory(View):
         form=CategoryForm(request.POST)
         if form.is_valid():
             if 'create_name' in request.POST:
-                return self.create(form.cleaned_data.get('create_name'))
+                return self.create(name=form.cleaned_data.get('create_name'),queryset=Category)
             if 'update_name' in request.POST:
                 self.update(queryset= form.cleaned_data.get('category'),name_new= form.cleaned_data.get('update_name'))
             if 'category' in request.POST:

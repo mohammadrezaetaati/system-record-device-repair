@@ -68,7 +68,6 @@ class Input(models.Model):
     )
 
     def save(self, *args, **kwargs):
-
         time = datetime.now()
         time_now = time.time().strftime("%H:%M:%S")
         self.entry_date = f"{ time_now} {device.functions.g_to_p()}"
