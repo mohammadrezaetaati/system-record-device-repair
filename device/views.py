@@ -185,6 +185,7 @@ class EditBrandCategory(EditCategory):
     
     def post(self,request):
             form=EditBrandCategoryForm(request.POST)
+            print(form.errors)
             if form.is_valid():
                 if 'create_name' in form.data:
                     print('create_name',form.cleaned_data)
@@ -216,3 +217,7 @@ class Ajax:
         category_name=request.GET.get('category_name')
         brands=BrandCategory.objects.filter(category__name=category_name)
         return JsonResponse(list(brands.values('id','name')),safe=False)
+
+
+
+    

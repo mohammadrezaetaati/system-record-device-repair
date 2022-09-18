@@ -52,32 +52,34 @@
                     </div>
                     <div class="x_content">
                         <p class="text-muted font-13 m-b-30">
-                           
+                        
                         </p>
                         
                     <table id="datatable" class="table table-striped table-bordered"  >
                             <thead>
                             <tr >
                                 <th style="text-align: center;">ردیف</th>
-                                <th style="text-align: center;">نام</th>
-                                <th style="text-align: center;">رئیس</th>
-                         
+                                <th style="text-align: center;">محل</th>
+                                <th style="text-align: center;">قسمت </th>
+                                <th style="text-align: center;">مسئول</th>  
+                                <th style="text-align: center;">تلفن</th> 
                                 <th style="text-align: center;">عملیات</th>                 
                             </tr>
                             </thead>
                             <tbody>
-                            {% for place in places %}
-                            <tr style="text-align: center;">
-                                <td>{{forloop.counter}}</td>
-                                <td>{{place.name}}</td>
-                                <td>{{place.boss}}</td>
-                             
+                          {% for branch in branchs %}
+                            <tr style="text-align: center;" id='mm'>
+                                <td >{{forloop.counter}}</td>
+                                <td>{{branch.place.name}}</td>
+                                <td>{{branch.name}}</td>
+                                <td>{{branch.boss}}</td>
+                                <td>{{branch.phone}}</td>
                                 <td> 
-                                <center><button id={{place.id}} type="button" class="btn btn-warning" style="height: 25px;padding: 0px;width: 60px;"  data-toggle="modal" data-target=".bs-example-modal-lg">ویرایش</button>
-                                <button id={{place.id}} type="submit" class="btn btn-danger"  style="height: 25px;padding: 0px;width: 50px;" data-toggle="modal" data-target=".bs-example-modal-sm" >حذف</button></center>
+                                <center><button id={{branch.id}} type="button" class="btn btn-warning" style="height: 25px;padding: 0px;width: 60px;"  data-toggle="modal" data-target=".bs-example-modal-lg">ویرایش</button>
+                                <button id={{branch.id}} type="submit" class="btn btn-danger"  style="height: 25px;padding: 0px;width: 50px;" data-toggle="modal" data-target=".bs-example-modal-sm" >حذف</button></center>
                                 </td>
                             </tr>
-                         {% endfor %}
+                     {% endfor %}
         
                             </tbody>
                         </table>
@@ -103,19 +105,41 @@
                                                     <h4 class="modal-title" id="myModalLabel">ویرایش</h4>
                                                 </div>
                                                 <div class="modal-body" >
-                                                  <center> <p style="color: red;display: none;" id="ErrorEdit">این محل از قبل وارد شده است</p></center>
+                                                {{form.errors}}
+                                                  <center> <p style="color: red;display: none;" id="ErrorEdit">این قسمت از قبل وارد شده است</p></center>
                                                 <form id="formedit" class="form-horizontal calender" role="form"  method="post">
                                                     {% csrf_token %}
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">نام</label>
+                                                            <label class="col-sm-3 control-label">محل</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text" class="form-control"  name="name" id="name">
+                                                                <select  class="form-control" required=""  searchable="Search here.."  name="place">
+                                                                <option >انتخاب...</option>
+                                                                {% for place in places %}
+                                                        
+                                                                <option value={{place.id}}>{{place.name}}</option>
+                                                         
+                                                        
+                                                                    
+                                                                {% endfor %}       
+                                                                </select>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">رئیس</label>
+                                                            <label class="col-sm-3 control-label">قسمت</label>
                                                             <div class="col-sm-9">
-                                                             <input type="text" class="form-control"  name="boss" id="boss">
+                                                                <input type="text" class="form-control"  name="name" id="name">
+                                                        </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-3 control-label">مسئول</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" class="form-control"  name="boss" id="boss">
+                                                        </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-3 control-label">تلفن</label>
+                                                            <div class="col-sm-9">
+                                                             <input type="text" class="form-control"  name="phone" id="phone">
                                                             </div>
                                                         </div>
                                                 </div>
@@ -139,21 +163,38 @@
                                                     <h4 class="modal-title" id="myModalLabel">اضافه کردن</h4>
                                                 </div>
                                                 <div class="modal-body" >
-                                                  <center> <p style="color: red;display: none;" id="pError">این محل از قبل وارد شده است</p></center>
+                                                  <center> <p style="color: red;display: none;" id="ErrorAdd">این قسمت از قبل وارد شده است</p></center>
                                                  
                                                 <form id="formAdd" class="form-horizontal calender" role="form"  method="post">
                                                     {% csrf_token %}
-                                                        <div class="form-group">
-                                                            <label class="col-sm-3 control-label">نام</label>
+                                                       <div class="form-group">
+                                                            <label class="col-sm-3 control-label">محل</label>
                                                             <div class="col-sm-9">
                                                             <input type='hidden' name='form_add'>
-                                                                <input type="text" class="form-control"  name="name" id="nam">
+                                                                <select  class="form-control" required=""  searchable="Search here.."  name="place">
+                                                                <option >انتخاب...</option>
+                                                                {% for place in places %}
+                                                                    <option value={{place.id}}>{{place.name}}</option>
+                                                                {% endfor %}       
+                                                                </select>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="col-sm-3 control-label">رئیس</label>
+                                                            <label class="col-sm-3 control-label">قسمت</label>
                                                             <div class="col-sm-9">
-                                                             <input type="text" class="form-control"  name="boss" id="bos">
+                                                                <input type="text" class="form-control"  name="name" id="nam">
+                                                        </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-3 control-label">مسئول</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" class="form-control"  name="boss" id="bos">
+                                                        </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-3 control-label">تلفن</label>
+                                                            <div class="col-sm-9">
+                                                             <input type="text" class="form-control"  name="phone" id="phon">
                                                             </div>
                                                         </div>
                                                 </div>
@@ -188,28 +229,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- ProtectedError modal -->
-                               
-                                    <div class="modal fade bs-example-modal-sm-p" tabindex="-1" role="dialog" aria-hidden="true" id='modelProtect'>
-                                        <div class="modal-dialog modal-sm">
-                                            <div class="modal-content" >
-                
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
-                                                    </button>
-                                                    <h4 class="modal-title" id="myModalLabel2">حفاظت شده</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                  
-                                                    <p>برای حذف این مورد ابتدا باید تمام قسمت هایی که به آن ارجاع داده شده اند را حذف کنید.</p>
-                         
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">بله</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <!-- /modals -->
                                 </div>
                              </div>
@@ -223,43 +242,26 @@
 {%endblock content%}   
 {%block js %}
 
+
 <!-- Load data -->
 <script type="text/javascript">
 $(document).ready(function(){
 $(".btn-warning").click(function(){
 var url = $(this).attr('data-url');
+const selectElement = document.querySelector("select");
+selectElement.children[0].textContent = "Select here"
     $.ajax({
-        url: "{% url 'ajax-edit-place'%}", 
-        data: {'place_id':this.id},
+        url: "{% url 'ajax-edit-branch'%}", 
+        data: {'branch_id':this.id},
         success: function(msg){  
+            {% comment %} document.getElementsByName('place')[0].options[0].innerHTML = msg.place;
+            document.getElementsByName('place')[0].options[0].value = msg.place_id; {% endcomment %}
             document.getElementById("name").value = msg.name;
-            document.getElementById("boss").value = msg.boss;    
+            document.getElementById("boss").value = msg.boss;   
+            document.getElementById("phone").value = msg.phone;
+            
             }
         });
-    });
-});
-</script>
-
-<!-- delete -->
-<script type="text/javascript">
-$(document).ready(function(){
-$(".btn-danger").click(function(){
-    var result=this.id
-$("#btn_delete").click(function(){
-      $.ajax({
-        url: "{% url 'ajax-delete-place'%}", 
-        data: {'place_id':result},
-        success: function(data){  
-            if (data.msg == 'success'){
-                $("#modelDelete").modal('hide');
-                } else if (data.msg == 'protectederror'){ 
-                    $("#modelDelete").modal('hide');
-                    $("#modelProtect").modal('show');
-                } 
-             }
-         });
-
-        })
     });
 });
 </script>
@@ -274,13 +276,13 @@ $("#btn_delete").click(function(){
     $.ajax(
         {
             type:'POST',
-            url:"{% url 'edit-place'%}",
+            url:"{% url 'edit-branch'%}",
             data:$('#formedit').serialize(),
             dataType:'json',
             cache: false,
             csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
             success:function (data){
-                if (data.msg == 'success'){
+                   if (data.msg == 'success'){
                     $("#myModel").modal('hide');
                   
                 } else if (data.msg == 'exists'){ 
@@ -296,7 +298,7 @@ $("#btn_delete").click(function(){
         }
     )
     }
-</script>   
+</script> 
 
 <!-- Add -->
  <script type="text/javascript">
@@ -308,7 +310,7 @@ $("#btn_delete").click(function(){
     $.ajax(
         {
             type:'POST',
-            url:"{% url 'edit-place'%}",
+            url:"{% url 'edit-branch'%}",
             data:$('#formAdd').serialize(),
             dataType:'json',
             cache: false,
@@ -318,7 +320,7 @@ $("#btn_delete").click(function(){
                     $("#modelAdd").modal('hide');
                     form.reset() 
                 } else if (data.msg == 'exists'){ 
-                    document.getElementById('pError').style.display= "block";
+                    document.getElementById('ErrorAdd').style.display= "block";
                     
                 }
             },
@@ -331,7 +333,30 @@ $("#btn_delete").click(function(){
     )
     }
 </script> 
+
+<!-- delete -->
+<script type="text/javascript">
+$(document).ready(function(){
+$(".btn-danger").click(function(){
+    var result=this.id
+$("#btn_delete").click(function(){
+      $.ajax({
+        url: "{% url 'ajax-delete-branch'%}", 
+        data: {'branch_id':result},
+        success: function(data){  
+            if (data.msg == 'success'){
+                $("#modelDelete").modal('hide');
+                }  
+             }
+         });
+
+        })
+    });
+});
+</script>
 {% endblock js%}
    
-
+{% comment %} {% block validatorjs %}
+   <script src="{% static 'vendors/validator/validator.js' %}"></script>     
+{% endblock validatorjs %} {% endcomment %}
 
