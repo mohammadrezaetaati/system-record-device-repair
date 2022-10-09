@@ -16,8 +16,14 @@ def g_to_p() -> str:
     ).strftime("%Y-%m-%d")
     return date_persian
 
+def save_date_time():
+    time = date.now()
+    time_now = time.time().strftime("%H:%M:%S")
+    print('hhhhhhhhhhhh')
+    print(f"{ time_now} {g_to_p()}",'ffffffff')
+    return f"{ time_now} {g_to_p()}"
 
-def create_work_order_number(work_order_number, date_string=g_to_p()) -> str:
+def create_work_order_number(work_order_number:str, date_string=g_to_p()) -> str:
 
     """
     Create a work order number for each device based on date,
@@ -34,9 +40,9 @@ def create_work_order_number(work_order_number, date_string=g_to_p()) -> str:
         or int(date_string[:4]) > int(work_order_number[:4]):
         last_chr = 0
     else:
-        last_chr = work_order_number[len(work_order_number) - 1:]
+        find=work_order_number.find('/')
+        last_chr = work_order_number[find+1:]
     last_chr = int(last_chr) + 1
-
     if int(date_string[5:7]) <= 9:
         return f"{date_string[:4]}{date_string[6]}/{last_chr}"
     else:

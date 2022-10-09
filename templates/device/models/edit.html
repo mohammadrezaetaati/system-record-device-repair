@@ -1,0 +1,90 @@
+{% block edit-model %}
+        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id='myModel'>
+                        <div class="modal-dialog modal-lg" >
+                            <div class="modal-content" >
+                                <div class="modal-header" >
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">ویرایش</h4>
+                                </div>
+                                <div class="modal-body" >
+                                    <center> <p style="color: red;display: none;" id="ErrorEdit">این شماره سریال دردست اقدام یا آماده به تحویل می باشد امکان ویرایش آن وجود ندارد</p></center>
+                                <form id="formedit" class="form-horizontal calender" role="form"  method="post" data-branchs-url="{% url 'ajax_load_branchs' %}" data-brands-category-url="{% url 'ajax_load_brands-category' %}">
+                                    {% csrf_token %}
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">سریال</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control"  name="serial" id="serial">
+                                        </div>
+                                        </div>
+                                        <div class="form-group">
+                                            
+                                            <label class="col-sm-3 control-label">نام</label>
+                                        
+                                            <div class="col-sm-9">
+                                               <select id="SelectCategory" class="form-control" required=""  searchable="Search here.."  name="category">
+                                                <option value=''>انتخاب...</option>
+                                                {% for cate in category %}
+                                                    <option value={{cate.name}}>{{cate.name}}</option>
+                                                {% endfor %}      
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            
+                                            <label class="col-sm-3 control-label">مدل</label>
+                                            <input type='hidden' name='form_edit'>
+                                            <div class="col-sm-9">
+                                                <select id="SelectBrandCategory" class="form-control" required=""  searchable="Search here.."  name="brand_category">
+                                                     <option value=''>انتخاب...</option>
+                                                    </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            
+                                            <label class="col-sm-3 control-label">محل مورداستفاده</label>
+                                        
+                                            <div class="col-sm-9">
+                                                <select  class="form-control" required=""  searchable="Search here.."  name="place" id="SelectPlace">
+                                                    <option >انتخاب...</option>
+                                                    {% for place in places %}
+                                            
+                                                    <option value={{place.name}}>{{place.name}}</option>
+                                                    {% endfor %}       
+                                                    </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            
+                                            <label class="col-sm-3 control-label">قسمت</label>
+                                        
+                                            <div class="col-sm-9">
+                                                <select id="SelectBranch" class="form-control" required=""  searchable="Search here.."  name="branch">
+                                                    <option value=''>انتخاب...</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">تحویل دهنده</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control"  name="delivery" id='delivery_input' >
+                                        </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">معایب</label>
+                                            <div class="col-sm-9">
+                                                <textarea   name="problem" id='problem'
+                                              class="form-control col-md-7 col-xs-12"></textarea>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+                                    <button type="submit" class="btn btn-primary" >ذخیره </button>
+                                </div>
+                                    </form>
+                            </div>
+                        </div>
+                    </div>
+{% endblock edit-model %}

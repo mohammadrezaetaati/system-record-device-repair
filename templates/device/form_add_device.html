@@ -97,7 +97,7 @@
                                     <select id="SelectPlace" class="form-control" required=""  searchable="Search here.."  name="place" >
                                         <option value=''>انتخاب...</option>
                                         {% for place in places %}
-                                            <option value={{place.name}}>{{place.name}}</option>
+                                            <option value={{place.id}}>{{place.name}}</option>
                                         {% endfor %}       
                                     </select>
                                     
@@ -156,21 +156,17 @@
 </div>
 
 <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
-<script type="text/javascript" src="{%static 'vendors/jquery/jquery.js' %}"></script>
+<!-- <script type="text/javascript" src="{%static 'vendors/jquery/jquery.js' %}"></script> -->
 <script>
     $("#SelectPlace").change(function () {
-        const url = $("#formAdd").attr("data-branchs-url");  // get the url of the `load_cities` view
-        const placeName = $(this).val();  // get the selected country ID from the HTML input
-
-        $.ajax({                       // initialize an AJAX request
-            url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
+        const url = $("#formAdd").attr("data-branchs-url");  
+        const placeName = $(this).val();  
+        $.ajax({                     
+            url: url,                   
             data: {
-                'place_name': placeName       // add the country id to the GET parameters
+                'place_name': placeName     
             },
-            success: function (data) {   // `data` is the return of the `load_cities` view function
-                // $("#id_city").html(data);  // replace the contents of the city input with the data that came from the server
-              
-
+            success: function (data) {   
                 let html_data = '<option value="">انتخاب...</option>';
                 data.forEach(function (branch) {
                     html_data += `<option value="${branch.id}">${branch.name}</option>`
@@ -186,18 +182,15 @@
 
 <script>
     $("#SelectCategory").change(function () {
-        const url = $("#formAdd").attr("data-brands-category-url");  // get the url of the `load_cities` view
-        const categoryName = $(this).val();  // get the selected country ID from the HTML input
+        const url = $("#formAdd").attr("data-brands-category-url"); 
+        const categoryName = $(this).val();  
 
-        $.ajax({                       // initialize an AJAX request
-            url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
+        $.ajax({                       
+            url: url,                   
             data: {
-                'category_name': categoryName       // add the country id to the GET parameters
+                'category_name': categoryName       
             },
-            success: function (data) {   // `data` is the return of the `load_cities` view function
-                // $("#id_city").html(data);  // replace the contents of the city input with the data that came from the server
-              
-
+            success: function (data) {   
                 let html_data = '<option value="">انتخاب...</option>';
                 data.forEach(function (brand) {
                     html_data += `<option value="${brand.id}">${brand.name}</option>`

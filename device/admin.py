@@ -1,12 +1,14 @@
 from django.contrib import admin
 
-from .models import Part, Category,Input,BrandCategory
+from .models import Part, Category,Input,BrandCategory,NumberPart
 
 
 admin.site.register(Part)
 admin.site.register(BrandCategory)
 admin.site.register(Category)
 admin.site.register(Input)
+admin.site.register(NumberPart)
+
 
 
 

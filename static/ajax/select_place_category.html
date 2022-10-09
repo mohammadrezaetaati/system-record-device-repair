@@ -1,0 +1,51 @@
+
+{% block place_category %}
+
+<!-- <script type="text/javascript" src="{%static 'vendors/jquery/jquery.js' %}"></script> -->
+<script>
+    $("#SelectPlace").change(function () {
+        const url = $("#formAdd").attr("data-branchs-url");  
+        const placeName = $(this).val();  
+        $.ajax({                     
+            url: url,                   
+            data: {
+                'place_name': placeName     
+            },
+            success: function (data) {   
+                let html_data = '<option value="">انتخاب...</option>';
+                data.forEach(function (branch) {
+                    html_data += `<option value="${branch.id}">${branch.name}</option>`
+            
+                });
+                console.log(html_data);
+                $("#SelectBranch").html(html_data);
+            }
+        });
+
+    });
+</script>      
+
+<script>
+    $("#SelectCategory").change(function () {
+        const url = $("#formAdd").attr("data-brands-category-url"); 
+        const categoryName = $(this).val();  
+
+        $.ajax({                       
+            url: url,                   
+            data: {
+                'category_name': categoryName       
+            },
+            success: function (data) {   
+                let html_data = '<option value="">انتخاب...</option>';
+                data.forEach(function (brand) {
+                    html_data += `<option value="${brand.id}">${brand.name}</option>`
+            
+                });
+                console.log(html_data);
+                $("#SelectBrandCategory").html(html_data);
+            }
+        });
+
+    });
+</script> 
+{% endblock place_category %}

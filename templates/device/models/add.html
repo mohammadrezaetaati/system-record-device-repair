@@ -1,0 +1,66 @@
+{% block add-model %}
+    <div class="modal fade bs-example-modal-lg-add" tabindex="-1" role="dialog" aria-hidden="true" id='modelAdd' >
+                        <div class="modal-dialog modal-lg" >
+                            <div class="modal-content" >
+
+                                <div class="modal-header" >
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">اضافه کردن</h4>
+                                </div>
+                                <div class="modal-body" >
+                                    <center> <p style="color: red;display: none;" id="ErrorAdd">لطفا قطعات نصب شده روی دستگاه را انتخاب یا قسمت توضیحات را تکمیل کنید</p></center>
+                                    
+                                <form id="formAdd" class="form-horizontal calender" role="form"  method="post">
+                                    {% csrf_token %}
+                                        <div class="form-group">
+                                            <div class="x_content">
+                                        <div class="table-responsive"> 
+                                        
+                                            <table id="taPart" class="table table-striped jambo_table bulk_action" >
+                                              
+                                            </table>  
+                                            
+                                        </div>
+                                        
+                                    </div> 
+
+                                    
+                                    </div>
+                                    <div class="form-group">
+
+                                        <div class="col-sm-9" style="left: 3px; top: -20px;">
+                                                    <label for="chkPassport">
+                                                    <input type="checkbox"   onclick="ShowHideDivRam(this)" id="chkPassport" name="finish_bool">
+                                                  تحویل داده شد
+                                           </label>
+                                             <label for="chkPassport">
+                                    </div>
+                                    </div>
+                              
+                                    <div class="form-group" id="delivery" style="display: none">
+                                        <label class="col-sm-3 control-label" style="left: 105px; ;">نام تحویل گیرنده</label>
+                                        <div class="col-sm-9" style="left: 120px; ;">
+                                             <p style="color: red;display: none;" id="ErrorNull">پرکردن این فیلدالزامیست</p>
+                                         <input type="text" class="form-control"  name="delivery"  style="width: 350px; ;">
+                                        
+                                    </div>
+                                    </div>
+                                         <div class="form-group">
+                                            <label class="col-sm-3 control-label" style="left: 105px; ;">توضیحات</label>
+                                            <div class="col-sm-9" style="left: 120px; ;">
+                                                <textarea id="textarea"  name="description" style="width: 350px; ;"
+                                                class="form-control col-md-7 col-xs-12"></textarea>
+                                        </div>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+                                    <button type="submit" class="btn btn-primary" >ذخیره تغییرات</button>
+                                </div>
+                                
+                                    </form>
+                            </div>
+                        </div>
+                    </div>
+{% endblock add-model %}

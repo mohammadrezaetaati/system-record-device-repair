@@ -1,0 +1,36 @@
+  <div class="modal fade bs-example-modal-sm-unrepairable" tabindex="-1" role="dialog" aria-hidden="true" id='modelUnrepairable'>
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content" >
+                                <div class="modal-header" >
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">وضعیت</h4>
+                                </div>
+                                <div class="modal-body" >
+                                <form id="formUnrepairable" class="form-horizontal calender" role="form"  method="post" >
+                                    {% csrf_token %}
+                                        <div class="form-group" id="delivery" >
+                                            <input type="hidden" name="unrepairable">
+                                           <label  > نام تحویل گیرنده:</label>
+                                            <div class="col-sm-9" style="left: 16px; ;">
+                                                <p style="color: red;display: none;" id="ErrorNull">پرکردن این فیلدالزامیست</p>
+                                                <input type="text" class="form-control"  name="transferee" id='delivery_input_status' style="width: 250px;">
+                                            </div>
+                                        </div> 
+                                        <div class="form-group" id="delivery" style="right: 100px; ;">
+                                                <div class="col-sm-9" style="left: 16px; ;">
+                                                     <label>توضیحات:</label>
+                                                <p style="color: red;display: none;" id="ErrorNull">پرکردن این فیلدالزامیست</p>
+                                                <textarea id="textarea"  name="description" style="width: 250px; ;"
+                                                class="form-control col-md-7 col-xs-12"></textarea>
+                                            </div>
+                                        </div>       
+                                    </div>
+                                    <div class="modal-footer" style="top: 40px;">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+                                        <button type="submit" class="btn btn-primary" >ذخیره </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>

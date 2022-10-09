@@ -11,7 +11,7 @@
     <div class="">
         <div class="page-title">
             <div class="title_left">
-                <h3>ثبت حکم کار</h3>
+                <h3>ثبت دستگاه جدید </h3>
             </div>
 
             <div class="title_right">
@@ -31,7 +31,7 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>ثبت حکم کار
+                        <h2>لطفا شماره اموال یا سریال دستگاه مورد نظر را وارد کنید.
                             <small></small>
                         </h2>
                         <ul class="nav navbar-right panel_toolbox">
@@ -56,27 +56,18 @@
                       
                         <form class="form-horizontal form-label-left" novalidate action="{%url 'operation'%}" method="post">
                             {% csrf_token %}
-                            {% if  status %}
-                                 <center><h3 style="color: red;">این دستگاه در دست اقدام می باشد!</h3></center>
-                            {% endif %}
+                          
                          
-                            <span class="section"> لطفا شماره اموال یا سریال دستگاه مورد نظر را وارد کنید.</span>
+                            
                        
-                            <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">عملیات  <span
-                                        class="required">*</span>
-                                </label>
-                                <div class="col-xs-3">
-                                     <select id="heard" class="form-control" required=""  searchable="Search here.."  name="operation">
-                                        <option value="press">انتخاب..</option>
-                                        <option value="Save">ثبت کردن</option>
-                                        <option value="Change_status">تغییروضعیت</option>
-                                    </select>
-                                </div>
-                            </div>
+                       
                             <label class="col-sm-3 control-label">شماره سریال/ اموال </label>
                                 <div class="col-xs-3">
+                                      {% if  status %}
+                                <p style="color: red;">این دستگاه در دست اقدام یا آماده به تحویل می باشد!</p></center>
+                            {% endif %}
                                  <input class="form-control" id="ex2" type="text" name='serial' >
+                             
                                 </div>
                                     
                                     {% comment %} <div class="input-group">

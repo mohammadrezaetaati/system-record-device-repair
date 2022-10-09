@@ -1,0 +1,433 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+
+
+{% block content %}
+        
+<!-- page content -->
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>دستگاه های دردست اقدام
+                    <small> </small>
+                </h3>
+            </div>
+
+            <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="جست و جو برای...">
+                        <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">برو!</button>
+                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>برای دیدن جزییات بیشتر روی علامت + کلیک کنید
+                            <small></small>
+                        </h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                   aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">تنظیمات 1</a>
+                                    </li>
+                                    <li><a href="#">تنظیمات 2</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                    
+                        <p class="text-muted font-13 m-b-30">
+                          
+                        </p>
+                        
+                        <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap dataTable no-footer dtr-inline collapsed">
+                            <thead>
+                            <tr>
+                                <th>شماره حکم کار</th>
+                                <th>شماره سریال/اموال</th>
+                                <th>نام</th>
+                                <th>مدل</th>
+                                <th > محل مورداستفاده</th>
+                                <th>قسمت</th>
+                                <th> تلفن</th>
+                                <th>تحویل دهنده</th>
+                                <th>تحویل گیرنده</th>
+                                <th>تاریخ ورود</th>
+                               
+                                <th>عملیات</th>
+                                 <th >معایب</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for field in devices %}
+                            
+                                <td >{{field.work_order_number}}</td>
+                               <a href=""> <td>{{field.serial}}</td></a> 
+                                <td>{{field.category}}</td>
+                                <td>{{field.brand_category.name}}</td>
+                                <td>{{field.place.name}}</td>
+                                <td>{{field.branch.name}}</td>
+                                <td>{{field.branch.phone}}</td>
+                                <td>{{field.delivery}}</td>
+                                <td>{{field.transferee_operator}}</td>
+                                <td>{{field.entry_date}}</td>
+                                <td> 
+                                   <div class="btn-group">
+                                    <button id={{field.id}} data-toggle="dropdown" class="btn btn-default dropdown-toggle btn btn-success"
+                                            type="button" style="height: 30px;padding: 0px;width: 90px;"> تغییروضعیت <span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#" id={{field.id}} class="provide" data-toggle="modal" data-target=".bs-example-modal-lg-add">آماده به تحویل</a>
+                                        </li>
+                                        <li><a href="#" id={{field.id}} class='repair-city' data-toggle="modal" data-target=".bs-example-modal-sm-repaircity" > تعمیردرشهر</a>
+                                        </li>
+                                        <li><a href="#" id={{field.id}} class='ngoing' data-toggle="modal" data-target=".bs-example-modal-sm-unrepairable">غیرقابل تعمیر</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                <button id={{field.id}} type="button" class="btn btn-warning" style="height: 25px;padding: 0px;width: 60px;"  data-toggle="modal" data-target=".bs-example-modal-lg">ویرایش</button>
+                                <button id={{field.id}} type="submit" class="btn btn-danger"  style="height: 25px;padding: 0px;width: 50px;" data-toggle="modal" data-target=".bs-example-modal-sm" >حذف</button>                       
+                                 </td>
+                                <td>{{field.problem}}</td>
+                           
+                            </tr>
+                           {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+                    <!-- modals -->
+                        <!-- Edit modal -->
+
+                            {% include "device/models/edit.html" %}
+
+                        <!-- Add modal -->
+   
+                            {% include "device/models/add.html" %}
+
+                        <!-- delete modal -->
+             
+                            {% include "device/models/delete.html" %}
+   
+                        <!-- repair city modal -->
+           
+                            {% include "device/models/repair_city.html" %}
+                   
+                        <!-- unrepairable city modal -->
+                            {% include "device/models/unrepairable.html" %}
+
+                    <!-- /modals -->
+                    {
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /page content -->
+
+{% endblock content %}
+
+{% block js %}
+
+<!-- Load Part Table -->
+<script type="text/javascript">
+$(document).ready(function(){
+$(".btn-success").click(function(){
+var url = $(this).attr('data-url');
+const selectElement = document.querySelector("select");
+selectElement.children[0].textContent = "Select here"
+    $.ajax({
+        url: "{% url 'load_part_table_ajax'%}", 
+        data: {'device_id':this.id},
+        success: function(data){  
+            $('#taPart').empty();
+          var trHead = ' <thead>'+
+                    '<tr class="heading">'+
+                            '<th class="column-title">انتخاب</th>'+
+                            '<th class="column-title">قطعه</th>'+
+                            '<th class="column-title">مدل</th>'+
+                            '<th class="column-title">تعداد</th>'+
+                            '<tr>'+
+                            '</thead>'; 
+           var trHTML = '';                 
+      data.forEach(function (item) {
+                    trHTML +=
+                            '<tr class="even pointer" >' +
+                                        '<td class="a-center "><input type="checkbox" class="flat" name='+item.id+' value='+item.id+' id="pname' + item.name  + '" /></td>' +
+                                        '<td>'+item.name+'</td>' +
+                                        '<td>'+item.brand+'</td>' +
+
+                                        '<td><input type="number" name='+item.id+' Style="width:50px ;" value="1"/></td>' +
+                                    '</tr>';
+                });
+                console.log(trHTML);
+                $('#taPart').append(trHead);
+                $('#taPart').append(trHTML);
+            }
+        });
+    });
+});
+</script>
+
+<!-- Edit status -->
+<script type="text/javascript">
+
+    const form = document.getElementById('formAdd');
+    form.addEventListener('submit',submitHandle);
+    function submitHandle(e){
+                e.preventDefault();
+    $.ajax(
+        {
+            type:'POST',
+            url:"{% url 'device-ngoing'%}",
+            data:$('#formAdd').serialize(),
+            dataType:'json',
+            cache: false,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            success:function (data){
+                   if (data.msg == 'success'){
+                    $("#modelAdd").modal('hide');
+                  
+                } else if (data.msg == 'exists'){ 
+                    document.getElementById('ErrorEdit').style.display= "block";
+                    
+                } else if (data.msg == 'not device and description'){ 
+                    document.getElementById('ErrorAdd').style.display= "block";
+               
+                    
+                } else if (data.msg == 'null'){ 
+                    document.getElementById('ErrorNull').style.display= "block";
+               
+                    
+                }
+            },
+            error:function (data){
+                if (data.msg == 'error'){
+                    alert('error')
+                }(jQuery)
+            }
+        }
+    )
+    }
+</script> 
+
+<!-- Load data -->
+<script type="text/javascript">
+    $(document).ready(function(){
+    $(".btn-warning").click(function(){
+    const selectElement = document.querySelector("select");
+    selectElement.children[0].textContent = "Select here"
+    
+        $.ajax({
+            url: "{% url 'ajax-edit-device'%}", 
+            data: {'device_id':this.id},
+            {% comment %} dataـ = '<option value="4">اداری</option>'; {% endcomment %}
+
+            success: function(msg){  
+                {% comment %} document.getElementsByName('branch')[0].options[0].innerHTML = msg.branch;
+                document.getElementsByName('branch')[0].options[0].value = msg.branch_id;  
+                document.getElementsByName('place')[0].options[0].innerHTML = msg.place;
+                document.getElementsByName('place')[0].options[0].value = msg.place_id; 
+                document.getElementsByName('category')[0].options[0].innerHTML = msg.category;
+                document.getElementsByName('category')[0].options[0].value = msg.category_id; 
+                document.getElementsByName('brand_category')[0].options[0].innerHTML = msg.brand_category;
+                document.getElementsByName('brand_category')[0].options[0].value = msg.brand_category_id;  {% endcomment %}
+                document.getElementById("delivery_input").value = msg.delivery;
+                document.getElementById("serial").value = msg.serial;
+                document.getElementById("problem").value = msg.problem;
+                }
+            });
+        });
+    });
+    </script>
+<!-- Edit -->
+<script type="text/javascript">
+
+    const formed = document.getElementById('formedit');
+    formed.addEventListener('submit',submitHandle);
+    function submitHandle(e){
+                e.preventDefault();
+    $.ajax(
+        {
+            type:'POST',
+            url:"{% url 'device-ngoing'%}",
+            data:$('#formedit').serialize(),
+            dataType:'json',
+            cache: false,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            success:function (data){
+                   if (data.msg == 'success'){
+                    $("#myModel").modal('hide');
+                  
+                } else if (data.msg == 'exists'){ 
+                    document.getElementById('ErrorEdit').style.display= "block";
+                    
+                }
+            },
+            error:function (data){
+                if (data.msg == 'error'){
+                    alert('error')
+                }(jQuery)
+            }
+        }
+    )
+    }
+</script> 
+<!-- Edit status unrepairable-->
+<script type="text/javascript">
+
+    const formUnrepairable = document.getElementById('formUnrepairable');
+    formUnrepairable.addEventListener('submit',submitHandle);
+    function submitHandle(e){
+                e.preventDefault();
+    $.ajax(
+        {
+            type:'POST',
+            url:"{% url 'device-ngoing'%}",
+            data:$('#formUnrepairable').serialize(),
+            dataType:'json',
+            cache: false,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            success:function (data){
+                   if (data.msg == 'success'){
+                    $("#modelUnrepairable").modal('hide');
+                  
+                } else if (data.msg == 'exists'){ 
+                    document.getElementById('ErrorEdit').style.display= "block";
+                    
+                }
+            },
+            error:function (data){
+                if (data.msg == 'error'){
+                    alert('error')
+                }(jQuery)
+            }
+        }
+    )
+    }
+</script> 
+<!-- delete -->
+<script type="text/javascript">
+$(document).ready(function(){
+$(".btn-danger").click(function(){
+    var result=this.id
+$("#btn_delete").click(function(){
+      $.ajax({
+        url: "{% url 'ajax-delete-device'%}", 
+        data: {'device_id':result},
+        success: function(data){  
+            if (data.msg == 'success'){
+                $("#modelDelete").modal('hide');
+                }  else if (data.msg == 'protectederror'){ 
+                    $("#modelDelete").modal('hide');
+                    $("#modelProtect").modal('show');
+                } 
+             }
+         });
+
+        })
+    });
+});
+</script>
+<!-- repair city -->
+<script type="text/javascript">
+$(document).ready(function(){
+$(".repair-city").click(function(){
+    var result=this.id
+$("#btn-repair-city").click(function(){
+      $.ajax({
+        url: "{% url 'ajax-repair-city'%}", 
+        data: {'device_id':result},
+        success: function(data){  
+            if (data.msg == 'success'){
+                $("#modelRepairCity").modal('hide');
+                }  
+             }
+         });
+
+        })
+    });
+});
+</script>
+{% comment %} <script type="text/javascript" src="{%static 'ajax/select_place_category.html' %}"></script> {% endcomment %}
+ <script>
+    $("#SelectPlace").change(function () {
+        const url = $("#formedit").attr("data-branchs-url");  
+        const placeName = $(this).val();  
+        $.ajax({                     
+            url: url,                   
+            data: {
+                'place_name': placeName     
+            },
+            success: function (data) {   
+                let html_data = '<option value="">انتخاب...</option>';
+                data.forEach(function (branch) {
+                      
+          
+                        html_data += `<option value="${branch.id}">${branch.name}</option>`
+                
+                });
+                console.log(html_data);
+                $("#SelectBranch").html(html_data);
+            }
+        });
+
+    });
+</script>  
+ 
+
+<script>
+    $("#SelectCategory").change(function () {
+        const url = $("#formedit").attr("data-brands-category-url"); 
+        const categoryName = $(this).val();  
+
+        $.ajax({                       
+            url: url,                   
+            data: {
+                'category_name': categoryName       
+            },
+            success: function (data) {   
+                let html_data = '<option value="">انتخاب...</option>';
+                data.forEach(function (brand) {
+                    html_data += `<option value="${brand.id}">${brand.name}</option>`
+            
+                });
+                console.log(html_data);
+                $("#SelectBrandCategory").html(html_data);
+            }
+        });
+
+    });
+</script> 
+<!-- Show Hide Delivery -->
+<script type="text/javascript">
+    function ShowHideDivRam(chkPassport) {
+        var dvPassport = document.getElementById("delivery");
+        dvPassport.style.display = chkPassport.checked ? "block" : "none";
+    }
+</script> 
+
+
+{% endblock js %}

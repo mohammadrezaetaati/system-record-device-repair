@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="fontiran.com:license" content="Y68A9">
     <link rel="icon" href="{%static 'build/images/favicon.ico'}" type="image/ico"/>
-    <title>Gentelella Alela! | قالب مدیریت رایگان </title>
+    <title>تعمیرگاه مدیریت فاوا</title>
 
     <!-- Bootstrap -->
     <link href="{%static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -98,11 +98,6 @@
                             <li><a><i class="fa fa-edit"></i>ثبت کردن <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li><a href="{%url 'operation' %}">حکم کار</a></li>
-                                    <li><a href="form_advanced.html">قطعات پیشرفته</a></li>
-                                    <li><a href="form_validation.html">فرم اعتبار سنجی</a></li>
-                                    <li><a href="form_wizards.html">فرم جادوگر</a></li>
-                                    <li><a href="form_upload.html">فرم بارگذاری</a></li>
-                                    <li><a href="form_buttons.html">فرم کلید ها</a></li>
                                 </ul>
                             </li>
                             <li><a><i class="fa fa-desktop"></i> اضافه کردن<span
@@ -112,17 +107,17 @@
                                     <li><a href="{% url 'edit-brand-category'%}">برند</a></li>
                                     <li><a href="{%url 'edit-place'%}">محل مورد استفاده</a></li>
                                     <li><a href="{%url 'edit-branch' %}">قسمت</a></li>
-                                    <li><a href="glyphicons.html">Glyphicons</a></li>
-                                    <li><a href="widgets.html">ابزارک</a></li>
-                                    <li><a href="invoice.html">صورت حساب</a></li>
-                                    <li><a href="inbox.html">صندوق</a></li>
-                                    <li><a href="calendar.html">تقویم</a></li>
+                                    <li><a href="{%url 'edit-part'%}">قطعات</a></li>
                                 </ul>
                             </li>
-                            <li><a><i class="fa fa-table"></i>اقلام تعمیری <span class="fa fa-chevron-down"></span></a>
+                            <li><a><i class="fa fa-table"></i> دستگاه های ثبت شده <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a href="tables.html">جداول</a></li>
-                                    <li><a href="{%url 'device-all'%}">مشاهده همه</a></li>
+                                    <li><a href="{%url 'device-provide'%}">آماده به تحویل</a></li>
+                                    <li><a href="{%url 'device-ngoing'%}"> دردست اقدام</a></li>
+                                    <li><a href="{%url 'device-repair-city'%}">تعمیردرشهر</a></li>
+                                    <li><a href="{%url 'device-unrepairable'%}">غیرقابل تعمیر</a></li>
+                                    <li><a href="{%url 'device-all'%}"> همه</a></li>
+                                    <li><a href="{%url 'device-print'%}"> چاپ</a></li>
                                 </ul>
                             </li>
                             <li><a><i class="fa fa-bar-chart-o"></i> ارائه داده <span class="fa fa-chevron-down"></span></a>
@@ -421,9 +416,12 @@
         {% comment %} <!-- Custom Theme Scripts -->
         <script src="{%static 'build/js/custom.min.js' %}"></script> {% endcomment %}
         </body>
-{% block js %}
+{% block ajax %}
 
 {% endblock %}
+{% block js %}
+
+{% endblock js %}
         </html>
 
 {% comment %} <script type="text/javascript" src="{%static 'vendors/jquery/jquery.js' %}"></script> {% endcomment %}

@@ -1,0 +1,104 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+
+
+
+{% block content %}  
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>قطعات
+                    <small></small>
+                </h3>
+            </div>
+
+            <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+            <div class="clearfix"></div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12" style="width: 1000px;;right: 250px; ;">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2> قطعات نصب شده روی دستگاه را انتخاب و بر روی دکمه ثبت کلیک کنید
+                            <small></small>
+                        </h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                   aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">تنظیمات 1</a>
+                                    </li>
+                                    <li><a href="#">تنظیمات 2</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="x_content">
+                        <form action="{%url 'edit-status' %}" method="post">
+                        {% csrf_token %}
+                        <div class="table-responsive">
+                           
+                            <table id="datatable" class="table table-striped jambo_table bulk_action" >
+                                <thead>
+                                <tr class="headings">
+                                    <th>
+                                        <input type="checkbox" id="check-all" class="flat" name='m'>
+                                    </th>
+                                    
+                                    <th class="column-title">قطعه</th>
+                                    <th class="column-title">مدل</th>
+                                    <th class="column-title">تعداد</th>
+                                    </th>
+                                    <th class="bulk-actions" colspan="7">
+                                        <a class="antoo" style="color:#fff; font-weight:500;">عمل همگانی ( <span
+                                                class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
+                                    </th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                 {% for part in parts %}
+                                <tr class="even pointer">
+                                    <td class="a-center ">
+                                        <input type="checkbox" class="flat" name={{part.id}} value={{part.id}}>
+                                    </td>
+                                    
+                                    <td class=" ">{{part.name}}</td>
+                                    <td class=" ">{{part.brand}} </td>
+                                    <td class=" "><input type="number" Style='width:50px ;' value="1" name={{part.id}}></td>
+                                    
+                                    </td>
+                                </tr>
+                             {% endfor %}
+                                </tbody> 
+                            </table>  
+                                    <button id="send" type="submit" class="btn btn-success" style="width: 100px; ;">ثبت</button>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

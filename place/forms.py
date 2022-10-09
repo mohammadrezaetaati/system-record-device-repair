@@ -9,7 +9,7 @@ class PlaceForm(forms.ModelForm):
 
     class Meta:
         model=Place
-        fields='__all__'
+        exclude=('update',)
 
 
 class Branchform(forms.ModelForm):
@@ -18,4 +18,4 @@ class Branchform(forms.ModelForm):
 
     class Meta:
         model=Branch
-        fields='__all__'
+        exclude=('update',)

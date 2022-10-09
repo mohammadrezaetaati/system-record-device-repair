@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+        
+<!-- page content -->
+            <div class="right_col" role="main">
+                <div class="">
+                    <div class="page-title">
+                        <div class="title_left">
+                            <h3>دستگاه های آماده به تحویل
+                                <small> </small>
+                            </h3>
+                        </div>
+
+                        <div class="title_right">
+                            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="جست و جو برای...">
+                                    <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">برو!</button>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>
+                                        برای دیدن جزییات بیشتر روی علامت + کلیک کنید
+                                    </h2>
+                                    <ul class="nav navbar-right panel_toolbox">
+                                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                            aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a href="#">تنظیمات 1</a>
+                                                </li>
+                                                <li><a href="#">تنظیمات 2</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="close-link"><i class="fa fa-close"></i></a>
+                                        </li>
+                                    </ul>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                
+                                    <p class="text-muted font-13 m-b-30">
+                                
+                                    </p>
+                                    
+                                    <div class="col-xs-12 table">
+                                                <table id="datatable-buttons" class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 7%">شماره حکم کار</th>
+                                            <th style="width: 7%">شماره سریال/اموال</th>
+                                            <th style="width: 5%">نام</th>
+                                            <th style="width: 7%"> محل مورداستفاده</th>
+                                            <th style="width: 7%">تاریخ ورود</th>
+                                            <th style="width: 7%">تاریخ خروج</th>
+                                            <th style="width: 10%">توضیحات</th>
+                                            <th style="width: 7%">قطعات نصب شده</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for field in devices %}
+                                        
+                                            <td>{{field.work_order_number}}</td>
+                                        <a> <td>{{field.serial}}</td></a> 
+                                            <td>{{field.category}}-{{field.brand_category.name}}</td>
+                                
+                                            <td>{{field.place.name}}-{{field.branch.name}}</td>
+                                            <td>{{field.entry_date}}</td>
+                                            <td>{{field.exit_date}}</td>
+                                            <td>{{field.description}}</td>
+
+                                            <td>                              
+                                                {% for part in field.parts.all %}
+                                                <br>
+                                            {{part.number}}عدد     {{part.part.name}} {{part.part.brand}}   
+                                                                            
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /page content -->
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+

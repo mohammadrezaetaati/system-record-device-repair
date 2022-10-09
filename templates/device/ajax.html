@@ -1,0 +1,282 @@
+<!-- Load Part Table -->
+{% block ajax %}
+
+<script type="text/javascript">
+$(document).ready(function(){
+$(".provide").click(function(){
+var url = $(this).attr('data-url');
+const selectElement = document.querySelector("select");
+selectElement.children[0].textContent = "Select here"
+    $.ajax({
+        url: "{% url 'load_part_table_ajax'%}", 
+        data: {'device_id':this.id},
+        success: function(data){  
+            $('#taPart').empty();
+          var trHead = ' <thead>'+
+                    '<tr class="heading">'+
+                            '<th class="column-title">انتخاب</th>'+
+                            '<th class="column-title">قطعه</th>'+
+                            '<th class="column-title">مدل</th>'+
+                            '<th class="column-title">تعداد</th>'+
+                            '<tr>'+
+                            '</thead>'; 
+           var trHTML = '';                 
+      data.forEach(function (item) {
+                    trHTML +=
+                            '<tr class="even pointer" >' +
+                                        '<td class="a-center "><input type="checkbox" class="flat" name='+item.id+' value='+item.id+' id="pname' + item.name  + '" /></td>' +
+                                        '<td>'+item.name+'</td>' +
+                                        '<td>'+item.brand+'</td>' +
+
+                                        '<td><input type="number" name='+item.id+' Style="width:50px ;" value="1"/></td>' +
+                                    '</tr>';
+                });
+                console.log(trHTML);
+                $('#taPart').append(trHead);
+                $('#taPart').append(trHTML);
+            }
+        });
+    });
+});
+</script>
+
+<!-- Edit status -->
+<script type="text/javascript">
+
+    const form = document.getElementById('formAdd');
+    form.addEventListener('submit',submitHandle);
+    function submitHandle(e){
+                e.preventDefault();
+    $.ajax(
+        {
+            type:'POST',
+            url:"{% url 'device-ngoing'%}",
+            data:$('#formAdd').serialize(),
+            dataType:'json',
+            cache: false,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            success:function (data){
+                   if (data.msg == 'success'){
+                    $("#modelAdd").modal('hide');
+                  
+                } else if (data.msg == 'exists'){ 
+                    document.getElementById('ErrorEdit').style.display= "block";
+                    
+                } else if (data.msg == 'not device and description'){ 
+                    document.getElementById('ErrorAdd').style.display= "block";
+               
+                    
+                } else if (data.msg == 'null'){ 
+                    document.getElementById('ErrorNull').style.display= "block";
+               
+                    
+                }
+            },
+            error:function (data){
+                if (data.msg == 'error'){
+                    alert('error')
+                }(jQuery)
+            }
+        }
+    )
+    }
+</script> 
+
+<!-- Load data -->
+<script type="text/javascript">
+    $(document).ready(function(){
+    $(".btn-warning").click(function(){
+    const selectElement = document.querySelector("select");
+    selectElement.children[0].textContent = "Select here"
+    
+        $.ajax({
+            url: "{% url 'ajax-edit-device'%}", 
+            data: {'device_id':this.id},
+            {% comment %} dataـ = '<option value="4">اداری</option>'; {% endcomment %}
+
+            success: function(msg){  
+                {% comment %} document.getElementsByName('branch')[0].options[0].innerHTML = msg.branch;
+                document.getElementsByName('branch')[0].options[0].value = msg.branch_id;  
+                document.getElementsByName('place')[0].options[0].innerHTML = msg.place;
+                document.getElementsByName('place')[0].options[0].value = msg.place_id; 
+                document.getElementsByName('category')[0].options[0].innerHTML = msg.category;
+                document.getElementsByName('category')[0].options[0].value = msg.category_id; 
+                document.getElementsByName('brand_category')[0].options[0].innerHTML = msg.brand_category;
+                document.getElementsByName('brand_category')[0].options[0].value = msg.brand_category_id;  {% endcomment %}
+                document.getElementById("delivery_input").value = msg.delivery;
+                document.getElementById("serial").value = msg.serial;
+                document.getElementById("problem").value = msg.problem;
+                }
+            });
+        });
+    });
+    </script>
+<!-- Edit -->
+<script type="text/javascript">
+
+    const formed = document.getElementById('formedit');
+    formed.addEventListener('submit',submitHandle);
+    function submitHandle(e){
+                e.preventDefault();
+    $.ajax(
+        {
+            type:'POST',
+            url:"{% url 'device-ngoing'%}",
+            data:$('#formedit').serialize(),
+            dataType:'json',
+            cache: false,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            success:function (data){
+                   if (data.msg == 'success'){
+                    $("#myModel").modal('hide');
+                  
+                } else if (data.msg == 'exists'){ 
+                    document.getElementById('ErrorEdit').style.display= "block";
+                    
+                }
+            },
+            error:function (data){
+                if (data.msg == 'error'){
+                    alert('error')
+                }(jQuery)
+            }
+        }
+    )
+    }
+</script> 
+
+<!-- delete -->
+<script type="text/javascript">
+$(document).ready(function(){
+$(".btn-danger").click(function(){
+    var result=this.id
+$("#btn_delete").click(function(){
+      $.ajax({
+        url: "{% url 'ajax-delete-device'%}", 
+        data: {'device_id':result},
+        success: function(data){  
+            if (data.msg == 'success'){
+                $("#modelDelete").modal('hide');
+                }  else if (data.msg == 'protectederror'){ 
+                    $("#modelDelete").modal('hide');
+                    $("#modelProtect").modal('show');
+                } 
+             }
+         });
+
+        })
+    });
+});
+</script>
+{% comment %} <script type="text/javascript" src="{%static 'ajax/select_place_category.html' %}"></script> {% endcomment %}
+ <script>
+    $("#SelectPlace").change(function () {
+        const url = $("#formedit").attr("data-branchs-url");  
+        const placeName = $(this).val();  
+        $.ajax({                     
+            url: url,                   
+            data: {
+                'place_name': placeName     
+            },
+            success: function (data) {   
+                let html_data = '<option value="">انتخاب...</option>';
+                data.forEach(function (branch) {
+                      
+          
+                        html_data += `<option value="${branch.id}">${branch.name}</option>`
+                
+                });
+                console.log(html_data);
+                $("#SelectBranch").html(html_data);
+            }
+        });
+
+    });
+</script>  
+ 
+<!-- Edit status unrepairable-->
+<script type="text/javascript">
+
+    const formUnrepairable = document.getElementById('formUnrepairable');
+    formUnrepairable.addEventListener('submit',submitHandle);
+    function submitHandle(e){
+                e.preventDefault();
+    $.ajax(
+        {
+            type:'POST',
+            url:"{% url 'device-ngoing'%}",
+            data:$('#formUnrepairable').serialize(),
+            dataType:'json',
+            cache: false,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            success:function (data){
+                   if (data.msg == 'success'){
+                    $("#modelUnrepairable").modal('hide');
+                  
+                } else if (data.msg == 'exists'){ 
+                    document.getElementById('ErrorEdit').style.display= "block";
+                    
+                }
+            },
+            error:function (data){
+                if (data.msg == 'error'){
+                    alert('error')
+                }(jQuery)
+            }
+        }
+    )
+    }
+</script>
+<script>
+    $("#SelectCategory").change(function () {
+        const url = $("#formedit").attr("data-brands-category-url"); 
+        const categoryName = $(this).val();  
+
+        $.ajax({                       
+            url: url,                   
+            data: {
+                'category_name': categoryName       
+            },
+            success: function (data) {   
+                let html_data = '<option value="">انتخاب...</option>';
+                data.forEach(function (brand) {
+                    html_data += `<option value="${brand.id}">${brand.name}</option>`
+            
+                });
+                console.log(html_data);
+                $("#SelectBrandCategory").html(html_data);
+            }
+        });
+
+    });
+</script> 
+<!-- Show Hide Delivery -->
+<script type="text/javascript">
+    function ShowHideDivRam(chkPassport) {
+        var dvPassport = document.getElementById("delivery");
+        dvPassport.style.display = chkPassport.checked ? "block" : "none";
+    }
+</script> 
+<!-- return status ngoing -->
+<script type="text/javascript">
+    $(document).ready(function(){
+    $(".ngoing").click(function(){
+        var result=this.id
+    $("#btn_ngoing").click(function(){
+          $.ajax({
+            url: "{% url 'ajax-return-status-ngoing'%}", 
+            data: {'device_id':result},
+            success: function(data){  
+                if (data.msg == 'success'){
+                    $("#modelNgoing").modal('hide');
+                    }  
+                 }
+             });
+    
+            })
+        });
+    });
+    </script>
+
+
+{% endblock ajax %}
