@@ -1,0 +1,22 @@
+<script type="text/javascript">
+$(document).ready(function(){
+$(".btn-danger").click(function(){
+    var result=this.id
+$("#btn_delete").click(function(){
+      $.ajax({
+        url: "{% url 'ajax-delete-device'%}", 
+        data: {'device_id':result},
+        success: function(data){  
+            if (data.msg == 'success'){
+                $("#modelDelete").modal('hide');
+                }  else if (data.msg == 'protectederror'){ 
+                    $("#modelDelete").modal('hide');
+                    $("#modelProtect").modal('show');
+                } 
+             }
+         });
+
+        })
+    });
+});
+</script>

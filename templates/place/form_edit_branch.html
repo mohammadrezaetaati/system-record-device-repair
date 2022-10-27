@@ -29,22 +29,21 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>  برای اضافه کردن برروی<button id='btn_add' type="button" class="btn btn-success" style="width: 80px;height: 30px;padding: 0px " data-toggle="modal" data-target=".bs-example-modal-lg-add">افزودن</button> وبرای عملیات ویرایش و حذف هر ستون بر روی دکمه مربوطه کلیک کنید.
+                    {% if user.add or user.rol == 'adminstrator' %}
+                        <h2>  برای اضافه کردن برروی<button id='btn_add' type="button" class="btn btn-success" style="width: 13%;height: 50%;padding: 0.7% ; " data-toggle="modal" data-target=".bs-example-modal-lg-add">افزودن</button> وبرای عملیات ویرایش و حذف هر ستون بر روی دکمه مربوطه کلیک کنید.
                             <small></small>
                         </h2>
+                    {% else %}
+                         <h2>  برای اضافه کردن برروی<button id='btn_add' type="button" class="btn btn-success" style="width: 13%;height: 50%;padding: 0.7% ; " data-toggle="modal" data-target=".bs-example-modal-lg-add" disabled="disabled">افزودن</button> وبرای عملیات ویرایش و حذف هر ستون بر روی دکمه مربوطه کلیک کنید.
+                            <small></small>
+                        </h2>
+                    {% endif %}
+
+
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                   aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">تنظیمات 1</a>
-                                    </li>
-                                    <li><a href="#">تنظیمات 2</a>
-                                    </li>
-                                </ul>
-                            </li>
+                  
                             <li><a class="close-link"><i class="fa fa-close"></i></a>
                             </li>
                         </ul>
@@ -75,8 +74,16 @@
                                 <td>{{branch.boss}}</td>
                                 <td>{{branch.phone}}</td>
                                 <td> 
-                                <center><button id={{branch.id}} type="button" class="btn btn-warning" style="height: 25px;padding: 0px;width: 60px;"  data-toggle="modal" data-target=".bs-example-modal-lg">ویرایش</button>
-                                <button id={{branch.id}} type="submit" class="btn btn-danger"  style="height: 25px;padding: 0px;width: 50px;" data-toggle="modal" data-target=".bs-example-modal-sm" >حذف</button></center>
+                            {% if user.edit or user.rol == 'adminstrator' %}
+                                <center><button id={{branch.id}} type="button" class="btn btn-warning" style="height: 100%;padding: 0px;width: 17%; padding: 0.7%;"  data-toggle="modal" data-target=".bs-example-modal-lg">ویرایش</button>
+                            {% else %}
+                                <center><button id={{branch.id}} type="button" class="btn btn-warning" style="height: 100%;padding: 0px;width: 17%; padding: 0.7%;"  data-toggle="modal" data-target=".bs-example-modal-lg" disabled="disabled" >ویرایش</button>
+                            {% endif %}
+                            {% if user.delete or user.rol == 'adminstrator' %}            
+                                 <button id={{branch.id}} type="submit" class="btn btn-danger"  style="height: 100%;padding: 0px;width: 13%; padding: 0.7%;" data-toggle="modal" data-target=".bs-example-modal-sm" >حذف</button></center>
+                            {% else %}
+                                 <button id={{branch.id}} type="submit" class="btn btn-danger"  style="height: 100%;padding: 0px;width: 13%; padding: 0.7%;" data-toggle="modal" data-target=".bs-example-modal-sm" disabled="disabled" >حذف</button></center>
+                            {% endif %}
                                 </td>
                             </tr>
                      {% endfor %}

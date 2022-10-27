@@ -1,0 +1,28 @@
+<script type="text/javascript">
+    $(document).ready(function(){
+    $(".btn-warning").click(function(){
+    const selectElement = document.querySelector("select");
+    selectElement.children[0].textContent = "Select here"
+    
+        $.ajax({
+            url: "{% url 'ajax-edit-device'%}", 
+            data: {'device_id':this.id},
+            {% comment %} dataـ = '<option value="4">اداری</option>'; {% endcomment %}
+
+            success: function(msg){  
+                 document.getElementsByName('branch')[0].options[0].innerHTML = msg.branch;
+                document.getElementsByName('branch')[0].options[0].value = msg.branch_id;  
+                document.getElementsByName('place')[0].options[0].innerHTML = msg.place;
+                document.getElementsByName('place')[0].options[0].value = msg.place_id; 
+                document.getElementsByName('category')[0].options[0].innerHTML = msg.category;
+                document.getElementsByName('category')[0].options[0].value = msg.category_id; 
+                document.getElementsByName('brand_category')[0].options[0].innerHTML = msg.brand_category;
+                document.getElementsByName('brand_category')[0].options[0].value = msg.brand_category_id;  
+                document.getElementById("delivery_input").value = msg.delivery;
+                document.getElementById("serial").value = msg.serial;
+                document.getElementById("problem").value = msg.problem;
+                }
+            });
+        });
+    });
+    </script>

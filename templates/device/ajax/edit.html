@@ -1,0 +1,32 @@
+<script type="text/javascript">
+    const formed = document.getElementById('formedit');
+    formed.addEventListener('submit',submitHandle);
+    function submitHandle(e){
+                e.preventDefault();
+    $.ajax(
+        {
+            type:'POST',
+            url:"{%url 'device-ngoing'%}",
+            data:$('#formedit').serialize(),
+            dataType:'json',
+            cache: false,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            success:function (data){
+                   if (data.msg == 'success'){
+                    $("#myModel").modal('hide');
+                  
+                } else if (data.msg == 'exists'){ 
+                    document.getElementById('ErrorEdit').style.display= "block";
+                    
+                }
+            },
+            error:function (data){
+                if (data.msg == 'error'){
+                    alert('error')
+                }(jQuery)
+            }
+        }
+    )
+    }
+</script> 
+

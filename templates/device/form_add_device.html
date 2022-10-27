@@ -9,16 +9,13 @@
     <div class="">
         <div class="page-title">
             <div class="title_left">
-                <h3>اعتبارسنجی فرم</h3>
+                <h3>ثبت دستگاه </h3>
             </div>
 
             <div class="title_right">
                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="جست و جو برای...">
-                        <span class="input-group-btn">
-                              <button class="btn btn-default" type="button">برو!</button>
-                          </span>
+                   
                     </div>
                 </div>
             </div>
@@ -29,22 +26,13 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>اعتبار سنجی فرم
-                            <small>زیر عنوان</small>
+                        <h2> اطلاعات دستگاه جدید را وارد کنید. 
+                            {% comment %} <small>زیر عنوان</small> {% endcomment %}
                         </h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                   aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">تنظیمات 1</a>
-                                    </li>
-                                    <li><a href="#">تنظیمات 2</a>
-                                    </li>
-                                </ul>
-                            </li>
+                    
                             <li><a class="close-link"><i class="fa fa-close"></i></a>
                             </li>
                         </ul>
@@ -54,10 +42,23 @@
 
                         <form id='formAdd' class="form-horizontal form-label-left" novalidate method="post"  data-branchs-url="{% url 'ajax_load_branchs' %}" data-brands-category-url="{% url 'ajax_load_brands-category' %}">
                             {% csrf_token %}
-                            {% if form.errors %}
-                                 <center><h3 style="color: red;">لطفا تمامی فیلد ها را پرکنید!</h3></center>
-                            {% endif %}
-                            <span class="section">اطلاعات شخصی</span>
+                       
+
+                            {% comment %} <span class="section">اطلاعات شخصی</span> {% endcomment %}
+                 
+                             <div class="item form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="occupation">شماره سریال/ اموال 
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input id="serial" class="form-control col-md-7 col-xs-12" 
+                                    
+                                    name="serial" 
+                                    required="required" type="text">
+                                           
+                                </div>
+                            </div>
+
                             <div class="item form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">دسته<span
                                         class="required">*</span>
@@ -70,12 +71,12 @@
                                     {% endfor %}      
                                     </select>
                                 </div>
-                                    <div class="fa-hover col-md-3 col-sm-4 col-xs-12">
+                                    {% comment %} <div class="fa-hover col-md-3 col-sm-4 col-xs-12">
                                         <a href="{%url 'operation'%}" 
                                             onclick="window.open(this.href,'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,innerHeight=500,innerWidth=500'); return false;">
                                                 <i class="fa fa-plus"></i>          
                                         </a>
-                                    </div>                               
+                                    </div>                                {% endcomment %}
                             </div>
                             <div class="item form-group">  
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">برند<span
@@ -119,9 +120,10 @@
                                     <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input id="occupation" type="text" name="delivery"
-                                           data-validate-length-range="5,20"
-                                           class="optional form-control col-md-7 col-xs-12">
+                                    <input id="name" class="form-control col-md-7 col-xs-12" 
+                                    
+                                    name="delivery" 
+                                    required="required" type="text">
                                            
                                 </div>
                                 
@@ -142,8 +144,12 @@
                             <div class="ln_solid"></div>
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-3">
-                                    <button type="submit" class="btn btn-primary">انصراف</button>
+                                {% if user.add or user.rol == 'adminstrator' %}
                                     <button id="send" type="submit" class="btn btn-success">ثبت</button>
+                                {%else%}
+                                    <button id="send" type="submit" class="btn btn-success" disabled='disable'>ثبت</button>
+
+                                {%endif%}
                                 </div>
                             </div>
                        
@@ -204,11 +210,57 @@
     });
 </script> 
 
+{% block js %}
 
 
+<script type="text/javascript">
+    const formed = document.getElementById('formAdd');
+    formed.addEventListener('submit',submitHandle);
+    function submitHandle(e){
+                e.preventDefault();
+    $.ajax(
+        {
+            type:'POST',
+            url:"{% url 'add-device'%}",
+            data:$('#formAdd').serialize(),
+            dataType:'json',
+            cache: false,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            success:function (data){
+                   if (data.msg == 'success'){
+                    {% comment %} $("#myModel").modal('hide'); {% endcomment %}
+                    alert('باموفقیت ثبت شد.')
+                    formed.reset()
+                  
+                } else if (data.msg == 'error'){ 
+                    if(data.status == 'ngoing'){
+                        alert('این دستگاه دردست اقدام می باشد! امکان ثبت مجدد آن وجودندارد!')
+                    }
+                    if(data.status == 'repair_city'){
+                        alert('این دستگاه دروضعیت تعمیردرشهر می باشد! امکان ثبت مجدد آن وجودندارد!')
+                    }
+                    if(data.status == 'provide'){
+                        alert('این دستگاه آماده به تحویل می باشد! امکان ثبت مجدد آن وجودندارد!')
+                    }
+                    if(data.status == 'unrepairable'){
+                        alert('این دستگاه دروضعیت غیرقابل تعمیر می باشد! امکان ثبت مجدد آن وجودندارد!')
+                    }
+                }
+            },
+            error:function (data){
+                if (data.msg == 'Notvalid'){
+                    alert('error')
+                }(jQuery)
+            }
+        }
+    )
+    }
+</script> 
 
-
+{% endblock js %}
 {% endblock content %}
-{% block validatorjs %}
-   <script src="{% static 'vendors/validator/validator.js' %}"></script>     
-{% endblock validatorjs %}
+ {% block validatorjs %}
+   {% comment %} <script src="{% static 'vendors/validator/validator.js' %}"></script>      {% endcomment %}
+<script src="{% static 'mos/validation.save_device.mos.js' %}"></script>
+
+{% endblock validatorjs %} 

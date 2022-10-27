@@ -1,13 +1,14 @@
 from django.urls import path
 
 from .views import SeeAllDevice, \
-    Operation, Storing,Ajax,EditCategory,\
+     Storing,Ajax,EditCategory,\
         EditBrandCategory,EditStatus,EditParts,\
             DeviceNgoing,DeviceProvide,DevicePrint,\
-                DeviceRepairCity,DeviceUnrepairable
+                DeviceRepairCity,DeviceUnrepairable,Chart
 
 
 urlpatterns = [
+    path("chart/", Chart.as_view(), name="device-chart"),
     path("unrepairable/", DeviceUnrepairable.as_view(), name="device-unrepairable"),
     path("print/", DevicePrint.as_view(), name="device-print"),
     path("all/", SeeAllDevice.as_view(), name="device-all"),
@@ -20,7 +21,6 @@ urlpatterns = [
     path("load_part_table_ajax", DeviceNgoing.load_part_table_ajax, name="load_part_table_ajax"),
     path("ajax-edit-device", DeviceNgoing.load_data_ajax, name="ajax-edit-device"),
     path("ajax-delete-device", DeviceNgoing.ajax_delete, name="ajax-delete-device"),
-    path("operation/", Operation.as_view(), name="operation"),
     path("edit-status/", EditStatus.as_view(), name="edit-status"),
     path("add/", Storing.as_view(), name="add-device"),
     path("parts/", EditParts.as_view(), name="edit-part"),

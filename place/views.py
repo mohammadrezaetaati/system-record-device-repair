@@ -11,13 +11,15 @@ from django.db.models import QuerySet, Model
 from django.views import View
 from django.db.models import ProtectedError
 from device.models import Input
+from django.contrib.auth.mixins import PermissionRequiredMixin,LoginRequiredMixin
 
 from device.views import EditCategory
 from .models import Place, Branch
 from .forms import PlaceForm, Branchform
+from user.permissions import RegistrarPermission
 
+class EditPlace(LoginRequiredMixin,RegistrarPermission,View):
 
-class EditPlace(View):
     place_id = None
     place = None
 
@@ -78,7 +80,8 @@ class EditPlace(View):
             return JsonResponse({"msg": "error"})
 
 
-class EditBranch(View):
+class EditBranch(LoginRequiredMixin,RegistrarPermission,View):
+
     branch_id = None
     branch = None
 

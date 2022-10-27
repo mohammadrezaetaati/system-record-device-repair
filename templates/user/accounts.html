@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block content %}
+{%load static %}
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>حساب ها</h3>
+            </div>
+            <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x_panel">
+                    <div class="x_content">
+                        <div class="row">
+                            <div class="clearfix"></div>
+                            <div class="col-md-4 col-sm-4 col-xs-12 profile_details" style='display: none;'>
+                                <div class="well profile_view">
+                                    <div class="col-sm-12">
+                                        <h4 class="brief"><i>استراتژیست دیجیتال</i></h4>
+                                        <div class="left col-xs-7">
+                                            <h2>ی</h2>
+                                            <p><strong>درباره: </strong>  </p>
+                                            <ul class="list-unstyled">
+                                                <li><i class="fa fa-building"></i> آدرسی:</li>
+                                                <li><i class="fa fa-phone"></i>  #:</li>
+                                            </ul>
+                                        </div>
+                                        <div class="right col-xs-5 text-center">
+                                            <img src="../build/images/user.png" alt=""
+                                                 class="img-circle img-responsive">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 bottom text-center">
+                                        <div class="col-xs-12 col-sm-6 emphasis">
+                                            <p class="ratings">
+                                                <a>4.0</a>
+                                                <a href="#"><span class="fa fa-star"></span></a>
+                                                <a href="#"><span class="fa fa-star"></span></a>
+                                                <a href="#"><span class="fa fa-star"></span></a>
+                                                <a href="#"><span class="fa fa-star"></span></a>
+                                                <a href="#"><span class="fa fa-star-o"></span></a>
+                                            </p>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 emphasis">
+                                            <button type="button" class="btn btn-success btn-xs"><i class="fa fa-user">
+                                            </i> <i class="fa fa-comments-o"></i></button>
+                                            <button type="button" class="btn btn-primary btn-xs">
+                                                <i class="fa fa-user"> </i> مشاهد حساب
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                            {% for account in accounts %}
+                            
+                            <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
+                            
+                                <div class="well profile_view">
+                                    <div class="col-sm-12">
+                                        
+                                        <div class="left col-xs-7">
+                                            <h2>{{account.first_name}} {{account.last_name}}</h2>
+                                            {% comment %} <p><strong>درباره: </strong> طراح وب / UX / گرافیست بازیگر / قهوه دوست </p> {% endcomment %}
+                                            <ul class="list-unstyled">
+                                                <br />
+                                                <li><i class="fa fa-user"></i> نام کاربری:{{account.username}}</li>
+                                            
+                                                {% if account.role == 'administrator' %}
+                                                    <li><i class="fa fa-child"></i> سمت: مدیر</li>
+                                                {% elif account.role == 'reporter'%}
+                                                    <li><i class="fa fa-child"></i> سمت: گزارش دهنده</li>
+                                                {% elif account.role == 'registrar'%}
+                                                    <li><i class="fa fa-child"></i> سمت: ثبت کننده</li>
+                                                {% endif %}
+
+                                            </ul>
+                                        </div>
+                                        <div class="right col-xs-5 text-center">
+                                            <img src="{%static 'build/images/user.png'%}" alt="" class="img-circle img-responsive">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 bottom text-center">
+                                        <div class="col-xs-12 col-sm-6 emphasis">
+                                            <a href="#" class="btn btn-primary btn-xs"><i class="fa  fa-user"></i> مشاهده </a>
+                                            <div class="btn-group" >
+                                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle btn btn-info btn-xs" type="button" aria-expanded="false" style='top: -3px;'><i class="fa fa-pencil"></i> ویرایش<span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="{%url 'edit' account.id %}">اطلاعات</a>
+                                                    </li>
+                                                    <li><a href="{%url 'edit-password' account.id %}">پسورد</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <a href="#" class="btn btn-danger btn-xs" id={{account.id}} data-toggle="modal" data-target=".bs-example-modal-sm"><i class="fa fa-trash-o"></i> حذف </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            {% endfor %}
+                            <!-- delete modal -->
+                                {% include "user/models/delete.html" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block js %}
+
+
+<!-- delete -->
+<script type="text/javascript">
+$(document).ready(function(){
+$(".btn-danger").click(function(){
+    var result=this.id
+$("#btn_delete").click(function(){
+      $.ajax({
+        url: "{% url 'delete-account'%}", 
+        data: {'user_id':result},
+        success: function(data){  
+            if (data.msg == 'success'){
+                $("#modelDelete").modal('hide');
+                }  else if (data.msg == 'protectederror'){ 
+                    $("#modelDelete").modal('hide');
+                    $("#modelProtect").modal('show');
+                } 
+             }
+         });
+
+        })
+    });
+});
+</script>
+
+{% endblock js %}

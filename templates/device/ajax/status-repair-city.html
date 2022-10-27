@@ -1,0 +1,19 @@
+<script type="text/javascript">
+$(document).ready(function(){
+$(".repair-city").click(function(){
+    var result=this.id
+$("#btn-repair-city").click(function(){
+      $.ajax({
+        url: "{% url 'ajax-repair-city'%}", 
+        data: {'device_id':result},
+        success: function(data){  
+            if (data.msg == 'success'){
+                $("#modelRepairCity").modal('hide');
+                }  
+             }
+         });
+
+        })
+    });
+});
+</script>

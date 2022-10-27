@@ -1,0 +1,35 @@
+<script type="text/javascript">
+    const form = document.getElementById('formAdd');
+    form.addEventListener('submit',submitHandle);
+    function submitHandle(e){
+                e.preventDefault();
+    $.ajax(
+        {
+            type:'POST',
+            url:"{% url 'device-ngoing'%}",
+            data:$('#formAdd').serialize(),
+            dataType:'json',
+            cache: false,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            success:function (data){
+                   if (data.msg == 'success'){
+                    $("#modelAdd").modal('hide');
+                } else if (data.msg == 'exists'){ 
+                    document.getElementById('ErrorEdit').style.display= "block";
+                } else if (data.msg == 'not device and description'){ 
+                    document.getElementById('ErrorAdd').style.display= "block";
+                } else if (data.msg == 'null'){ 
+                    document.getElementById('ErrorNull').style.display= "block"; 
+                } else if (data.msg == 'null_seal'){ 
+                    document.getElementById('ErrorNullSeal').style.display= "block";     
+                }
+            },
+            error:function (data){
+                if (data.msg == 'error'){
+                    alert('error')
+                }(jQuery)
+            }
+        }
+    )
+    }
+</script> 

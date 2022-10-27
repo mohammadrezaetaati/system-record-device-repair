@@ -63,8 +63,16 @@
                        
                             <label class="col-sm-3 control-label">شماره سریال/ اموال </label>
                                 <div class="col-xs-3">
-                                      {% if  status %}
-                                <p style="color: red;">این دستگاه در دست اقدام یا آماده به تحویل می باشد!</p></center>
+                            {% if status == 'repair_city' %}
+                                
+                                <p style="color: red;">این دستگاه دروضعیت تعمیردرشهر می باشد! امکان ثبت مجدد آن وجودندارد</p></center>
+                            {% elif status == 'ngoing' %}
+                                <p style="color: red;">این دستگاه دردست اقدام می باشد! امکان ثبت مجدد آن وجودندارد</p></center>
+                            {% elif status == 'provide' %}
+                                <p style="color: red;">این دستگاه آماده به تحویل می باشد! امکان ثبت مجدد آن وجودندارد</p></center>
+                            {% elif status == 'unrepairable' %}
+                                <p style="color: red;">این دستگاه دروضعیت غیرقابل تعمیر می باشد! امکان ثبت مجدد آن وجودندارد</p></center>
+
                             {% endif %}
                                  <input class="form-control" id="ex2" type="text" name='serial' >
                              
@@ -87,8 +95,12 @@
                             <div class="ln_solid"></div>
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-3">
-                                    <button type="submit" class="btn btn-primary">انصراف</button>
-                                    <button id="send" type="submit" class="btn btn-success">ارسال</button>
+                        {% if user.add or user.rol == 'adminstrator' %}
+                            <button id="send" type="submit" class="btn btn-success">ارسال</button>
+                        {% else %}
+                             <button id="send" type="submit" class="btn btn-success" disabled="disabled">ارسال</button>
+                        {% endif %}
+
                                 </div>
                             </div>
                         </form>

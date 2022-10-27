@@ -18,14 +18,7 @@
             </div>
 
             <div class="title_right">
-                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="جست و جو برای...">
-                        <span class="input-group-btn">
-                      <button class="btn btn-default" type="button">برو!</button>
-                    </span>
-                    </div>
-                </div>
+         
             </div>
         </div>
 
@@ -40,16 +33,7 @@
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                   aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">تنظیمات 1</a>
-                                    </li>
-                                    <li><a href="#">تنظیمات 2</a>
-                                    </li>
-                                </ul>
-                            </li>
+                
                             <li><a class="close-link"><i class="fa fa-close"></i></a>
                             </li>
                         </ul>
@@ -64,16 +48,18 @@
                         <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap dataTable no-footer dtr-inline collapsed">
                             <thead>
                             <tr>
+                                <th  >ردیف</th>
                                 <th>شماره حکم کار</th>
                                 <th>شماره سریال/اموال</th>
-                                <th>نام</th>
-                                <th>مدل</th>
+                                <th>نام و مدل</th>
                                 <th > محل مورداستفاده</th>
-                                <th>قسمت</th>
+                                
                                 <th> تلفن</th>
                                 <th>تحویل دهنده</th>
                                 <th>تحویل گیرنده</th>
-                                <th>تاریخ ورود</th>
+                                <th>زمان و تاریخ ورود</th>
+                                <th>زمان و تاریخ ارسال</th>
+
                                
                                 <th>عملیات</th>
                                  <th >معایب</th>
@@ -81,21 +67,29 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for field in devices %}          
+                            {% for field in devices %} 
+                                <td >{{forloop.counter}}</td>
                                 <td>{{field.work_order_number}}</td>
                                <a href=""> <td>{{field.serial}}</td></a> 
-                                <td>{{field.category}}</td>
-                                <td>{{field.brand_category.name}}</td>
-                                <td>{{field.place.name}}</td>
-                                <td>{{field.branch.name}}</td>
+                                <td>{{field.category}} - {{field.brand_category.name}}</td>
+                            
+                                <td>{{field.place.name}} - {{field.branch.name}}</td>
+                            
                                 <td>{{field.branch.phone}}</td>
                                 <td>{{field.delivery}}</td>
                                 <td>{{field.transferee_operator}}</td>
                                 <td>{{field.entry_date}}</td>
+                                <td>{{field.repair_city_date}}</td>
+
                                 <td> 
                                    <div class="btn-group">
-                                    <button id={{field.id}} data-toggle="dropdown" class="btn btn-default dropdown-toggle btn btn-success"
-                                            type="button" style="height: 30px;padding: 0px;width: 90px;"> تغییروضعیت <span class="caret"></span></button>
+                                    {% if user.change_status or user.rol == 'adminstrator' %}
+                                        <button id={{field.id}} data-toggle="dropdown" class="btn btn-default dropdown-toggle btn btn-success"
+                                                type="button" style="height: 100%;padding: 0px;width: 102%; padding: 5%;"> تغییروضعیت <span class="caret"></span></button>
+                                    {% else %}
+                                        <button id={{field.id}} data-toggle="dropdown" class="btn btn-default dropdown-toggle btn btn-success"
+                                                type="button" style="height: 100%;padding: 0px;width: 102%; padding: 5%;" disabled="disabled"> تغییروضعیت <span class="caret"  ></span></button>
+                                    {% endif %}
                                     <ul class="dropdown-menu">
                                         <li><a href="#" id={{field.id}} class="provide" data-toggle="modal" data-target=".bs-example-modal-lg-add">آماده به تحویل</a>
                                         </li>
@@ -106,8 +100,16 @@
                                     </ul>
                                 </div>
                                 
-                                <button id={{field.id}} type="button" class="btn btn-warning" style="height: 25px;padding: 0px;width: 60px;"  data-toggle="modal" data-target=".bs-example-modal-lg">ویرایش</button>
-                                <button id={{field.id}} type="submit" class="btn btn-danger"  style="height: 25px;padding: 0px;width: 50px;" data-toggle="modal" data-target=".bs-example-modal-sm" >حذف</button>                       
+                            {% if user.edit or user.rol == 'adminstrator' %}   
+                                <button id={{field.id}} type="button" class="btn btn-warning" style="height: 100%;padding: 0px;width: 25%; padding: 1.5%;"  data-toggle="modal" data-target=".bs-example-modal-lg">ویرایش</button>
+                            {% else %}
+                                <button id={{field.id}} type="button" class="btn btn-warning" style="height: 100%;padding: 0px;width: 25%; padding: 1.5%;"  data-toggle="modal" data-target=".bs-example-modal-lg" disabled="disabled" >ویرایش</button>
+                            {% endif %}
+                            {% if user.delete or user.rol == 'adminstrator' %}            
+                                <button id={{field.id}} type="submit" class="btn btn-danger"  style="height: 100%;padding: 0px;width: 25%; padding: 1.5%;" data-toggle="modal" data-target=".bs-example-modal-sm" >حذف</button>                       
+                            {% else %}
+                                <button id={{field.id}} type="submit" class="btn btn-danger"  style="height: 100%;padding: 0px;width: 25%; padding: 1.5%;" data-toggle="modal" data-target=".bs-example-modal-sm" disabled="disabled" >حذف</button>                       
+                            {% endif %}                      
                                  </td>
                                 <td>{{field.problem}}</td>
                            

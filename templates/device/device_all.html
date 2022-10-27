@@ -17,15 +17,7 @@
                         </div>
 
                         <div class="title_right">
-                            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="جست و جو برای...">
-                                    <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">برو!</button>
-                                </span>
-                                </div>
-                            </div>
-                        </div>
+                   
                     </div>
                     <div class="clearfix"></div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
@@ -37,16 +29,7 @@
                                     <ul class="nav navbar-right panel_toolbox">
                                         <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                         </li>
-                                        <li class="dropdown">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                            aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                            <ul class="dropdown-menu" role="menu">
-                                                <li><a href="#">تنظیمات 1</a>
-                                                </li>
-                                                <li><a href="#">تنظیمات 2</a>
-                                                </li>
-                                            </ul>
-                                        </li>
+                             
                                         <li><a class="close-link"><i class="fa fa-close"></i></a>
                                         </li>
                                     </ul>
@@ -60,9 +43,15 @@
                                     
                                     <div class="col-xs-12 table">
                                                 <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap dataTable no-footer dtr-inline collapsed">
-                                        <thead>
+                                        <thead >
                                         <tr>
-                                            <th>شماره حکم کار</th>
+                                           
+                                            <!-- <th style="display: none;">df</th> -->
+                                            <th  >ردیف</th>
+                                            
+                                            <th  >شماره حکم کار</th>
+                                            <!-- <th class="sorting_desc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="نام: activate to sort column ascending" style="width: 103px;" aria-sort="descending">نام</th> -->
+
                                             <th>شماره سریال/اموال</th>
                                             <th>نام</th>
                                             <th> محل مورداستفاده</th>
@@ -71,13 +60,17 @@
                                             <th>انباردار</th>
                                             <th> تلفن</th>
                                             <th>تحویل دهنده (کاربر)</th>
+                                             <th>تحویل گیرنده (اپراتور)</th>
+                                            
                                             <th>تحویل دهنده (اپراتور)</th>
                                             <th>تحویل گیرنده (کاربر)</th>
-                                            <th>تحویل گیرنده (اپراتور)</th>
+                                           
                                             <th> وضعیت</th>
                                             <th>زمان و تاریخ ورود</th>
                                             <th> زمان و تاریخ آماده شدن</th>
                                             <th>زمان و تاریخ خروج</th>
+                                            <th>شماره پلمپ</th>
+
                                             <th>معایب</th>
                                             <th>توضیحات</th>
                                             <th>قطعات نصب شده</th>
@@ -85,20 +78,19 @@
                                         </thead>
                                         <tbody>
                                         {% for field in devices %}
-                                        
-                                            <td>{{field.work_order_number}}</td>
+                                            <td >{{forloop.counter}}</td>
+                                            <td >{{field.work_order_number}}</td>
                                             <td>{{field.serial}}</td>
                                             <td>{{field.category}}-{{field.brand_category.name}}</td>
                                             <td>{{field.place.name}}-{{field.branch.name}}</td>
                                             <td>{{field.place.boss}}</td>
                                             <td>{{field.branch.boss}}</td>
-                                            <td>{{field.place.storekeeper}}</td>
-                                            
+                                            <td>{{field.place.storekeeper}}</td>  
                                             <td>{{field.branch.phone}}</td>
                                             <td>{{field.delivery}}</td>
-                                            <td>{{field.delivery_operator}}</td>
-                                            <td>{{field.transferee}}</td>
                                             <td>{{field.transferee_operator}}</td>
+                                            <td>{{field.delivery_operator}}</td>
+                                             <td>{{field.transferee}}</td>
                                             <td>
                                             {% if field.status == 'finished' %}
                                             <p style="color:rgba(17, 136, 80, 0.842) ;">تحویل داده شد</p>   
@@ -115,6 +107,8 @@
                                             <td>{{field.entry_date}}</td>
                                             <td>{{field.provide_date}}</td>
                                             <td>{{field.exit_date}}</td>
+                                            <td>{{field.seal_number}}</td>
+
                                             <td>{{field.problem}}</td>
                                             <td>{{field.description}}</td>
 

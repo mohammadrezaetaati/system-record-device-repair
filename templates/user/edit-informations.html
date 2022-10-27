@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}     
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>حساب</h3>
+            </div>
+
+            <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>ویرایش
+                        </h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                      
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+
+                        <form id='formAdd' class="form-horizontal form-label-left" novalidate method="post" action="{%url 'edit' account.id %}">
+                            {% csrf_token %}
+                            {% for error in form.errors %}
+                            {% if error == 'username' %}
+                            <center><p style='color: red; '>  این نام کاربری وجود دارد!! </p> </center> 
+                                {% endif %}
+                                {% endfor %} 
+                            <div class="item form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="occupation"> نام 
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input id="name" class="form-control col-md-7 col-xs-12" 
+                                    data-validate-length="2,30"
+                                    name="first_name"  value={{account.first_name}}
+                                    required="required" type="text">
+                                           
+                                </div>                
+                            </div>
+
+                            <div class="item form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="occupation">نام خانوادگی 
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input id="name" class="form-control col-md-7 col-xs-12" 
+                                    data-validate-length="2,30" 
+                                    name="last_name" value={{account.last_name}}
+                                    required="required" type="text">
+                                           
+                                </div>                
+                            </div>
+                        
+                            <div class="item form-group">
+                               
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="occupation">نام کاربری
+                                   
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input id="name" class="form-control col-md-7 col-xs-12" 
+                                    data-validate-length="" 
+                                    name="username" value={{account.username}}
+                                    required="required" type="text"> 
+                                </div>                
+                            </div>
+                              <div class="form-group">
+                                <label class="col-md-3 col-sm-3 col-xs-12 control-label"> سطح دسترسی 
+                                    <br>
+                                    <small class="text-navy">راانتخاب کنید</small>
+                                </label>
+
+                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                    <div class="checkbox">
+                                        <label>
+                                            {% if account.role == 'administrator' %}
+                                                <input type="radio" checked  name="role" id='adminstatore' value="administrator"> مدیرسیستم
+                                            {% else %}
+                                                 <input type="radio"   name="role" id='adminstatore' value="administrator"> مدیرسیستم
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            {% if account.role == 'reporter' %}
+                                                <input type="radio" checked  name="role" id='report' value="reporter"> گزارش دهنده
+                                            {% else %}
+                                                <input type="radio"   name="role" id='report' value="reporter"> گزارش دهنده
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            {% if account.role == 'registrar' %}
+                                                <input type="radio" checked  name="role"  id='save_information' value="registrar"> ثبت کننده
+                                            {% else %}
+                                                <input type="radio"   name="role"  id='save_information' value="registrar"> ثبت کننده
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    {% comment %} </div> {% endcomment %}
+
+
+                                {% comment %} <div class="col-md-9 col-sm-9 col-xs-12"> {% endcomment %}
+                                    {% if account.role == 'registrar' %}
+                                        <div id='Divsave_information' >
+                                    {% else %}
+                                        <div id='Divsave_information' style="display: none;">
+                                    {% endif %}
+                                     <div class="checkbox">
+                                        <label>
+                                            {% if account.change_status %}
+                                                <input type="checkbox" class="flat" name="change_status" checked='checked'> تغییروضعیت
+                                            {% else %}
+                                                <input type="checkbox" class="flat" name="change_status" > تغییروضعیت
+                                            {% endif %}
+                                            
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            {% if account.add %}
+                                                <input type="checkbox" class="flat" name="add" checked='checked'> افزودن
+                                            {% else %}
+                                                <input type="checkbox" class="flat" name="add" > افزودن
+                                            {% endif %}
+                                            
+                                        </label>
+                                    </div>
+
+                                    <div class="checkbox">
+                                        <label>
+                                        {% if account.edit %}
+                                            <input type="checkbox" class="flat" name="edit" checked='checked'> ویرایش
+                                        
+                                        {% else %}
+                                            <input type="checkbox" class="flat" name="edit" > ویرایش
+
+                                        {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                        {% if account.delete %}
+                                            <input type="checkbox" class="flat" name="delete" checked='checked'> حذف
+                                        
+                                        {% else %}
+                                            <input type="checkbox" class="flat" name="delete" > حذف
+                                        {% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+
+                            <div class="ln_solid"></div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-3">
+                                    <button type="submit" class="btn btn-primary">انصراف</button>
+                                    <button id="send" type="submit" class="btn btn-success">ثبت</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+{% endblock content %}
+{% block validatorjs %}
+   <script src="{% static 'vendors/validator/validator.js' %}"></script>     
+{% endblock validatorjs %}
+
+
+{% block js %}
+<!-- Show Hide Seal -->
+<script type="text/javascript">
+    $(document).ready(function() {
+    $("input[id$='save_information']").click(function() {
+        $("#Divsave_information").show();
+    });
+});
+$(document).ready(function() {
+    $("input[id$='report']").click(function() {
+        $("#Divsave_information").hide();
+    });
+});
+$(document).ready(function() {
+    $("input[id$='adminstatore']").click(function() {
+        $("#Divsave_information").hide();
+    });
+});
+</script> 
+{% endblock js %}

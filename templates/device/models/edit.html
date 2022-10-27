@@ -13,6 +13,7 @@
                                     {% csrf_token %}
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">سریال</label>
+                               
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control"  name="serial" id="serial">
                                         </div>
@@ -50,7 +51,7 @@
                                                     <option >انتخاب...</option>
                                                     {% for place in places %}
                                             
-                                                    <option value={{place.name}}>{{place.name}}</option>
+                                                    <option value={{place.id}}>{{place.name}}</option>
                                                     {% endfor %}       
                                                     </select>
                                             </div>

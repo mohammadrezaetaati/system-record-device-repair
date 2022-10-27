@@ -65,11 +65,13 @@ class Input(models.Model):
     branch = models.ForeignKey(Branch,on_delete=models.PROTECT)
     entry_date = models.CharField(max_length=20, editable=False)
     exit_date = models.CharField(max_length=20, editable=False,default='-')
-    provide_date = models.CharField(max_length=20, editable=False)
+    provide_date = models.CharField(max_length=20, editable=False,default='-')
+    repair_city_date=models.CharField(max_length=20, editable=False,default='-')
     delivery = models.CharField(max_length=30)
     delivery_operator=models.CharField(max_length=100,null=True,blank=True,default='-')
     transferee=models.CharField(max_length=30,null=True,blank=True,default='-')
     transferee_operator = models.CharField(max_length=100)
+    seal_number=models.CharField(max_length=30,null=True,blank=True,default='-')
     parts=models.ManyToManyField(NumberPart,null=True,blank=True,default='-')
     problem = models.CharField(max_length=255)
     description = models.CharField(
@@ -79,9 +81,6 @@ class Input(models.Model):
         max_length=12, choices=STATUS_CHOICES
     )
 
-    def save(self, *args, **kwargs):
-        self.entry_date = device.functions.save_date_time()
-        super(Input, self).save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.work_order_number

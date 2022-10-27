@@ -68,8 +68,9 @@ selectElement.children[0].textContent = "Select here"
                     
                 } else if (data.msg == 'null'){ 
                     document.getElementById('ErrorNull').style.display= "block";
-               
-                    
+                  
+                }else if (data.msg == 'null_seal'){ 
+                    document.getElementById('ErrorNullSeal').style.display= "block";     
                 }
             },
             error:function (data){
@@ -255,6 +256,13 @@ $("#btn_delete").click(function(){
     function ShowHideDivRam(chkPassport) {
         var dvPassport = document.getElementById("delivery");
         dvPassport.style.display = chkPassport.checked ? "block" : "none";
+    }
+</script> 
+<!-- Show Hide Seal -->
+<script type="text/javascript">
+    function ShowHideDivSeal(chkSeal) {
+        var dvPassport = document.getElementById("DivSeal");
+        dvPassport.style.display = chkSeal.checked ? "block" : "none";
     }
 </script> 
 <!-- return status ngoing -->

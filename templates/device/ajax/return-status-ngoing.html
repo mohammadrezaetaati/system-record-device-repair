@@ -1,0 +1,19 @@
+<script type="text/javascript">
+    $(document).ready(function(){
+    $(".ngoing").click(function(){
+        var result=this.id
+    $("#btn_ngoing").click(function(){
+          $.ajax({
+            url: "{% url 'ajax-return-status-ngoing'%}", 
+            data: {'device_id':result},
+            success: function(data){  
+                if (data.msg == 'success'){
+                    $("#modelNgoing").modal('hide');
+                    }  
+                 }
+             });
+    
+            })
+        });
+    });
+</script>

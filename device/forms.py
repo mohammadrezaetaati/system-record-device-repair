@@ -24,7 +24,7 @@ class AddDeviceForm(forms.ModelForm):
     class Meta:
         model=Input
         # exclude=('parts','work_order_number','serial','status','transferee',)
-        fields=['category','brand_category','place','branch','problem','delivery']
+        fields=['category','brand_category','place','branch','problem','delivery','serial']
 
 
 
@@ -33,7 +33,7 @@ class CategoryForm(forms.Form):
     create_name=forms.CharField(max_length=100,required=False)
     update_name=forms.CharField(max_length=100,required=False)
     hidden=forms.CharField(max_length=100,widget=forms.HiddenInput(),required=False)
-    category=forms.ModelMultipleChoiceField(queryset=Category.objects.all(),to_field_name='name',required=False)
+    category=forms.ModelMultipleChoiceField(queryset=Category.objects.all(),to_field_name='id',required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -71,11 +71,12 @@ class EditPartsForm(forms.ModelForm):
 class EditStatusForm(forms.Form):
     number=forms.IntegerField(required=False)
     delivery=forms.CharField(max_length=100,required=False)
+    seal_number=forms.CharField(max_length=20,required=False)
     description=forms.CharField(max_length=255,required=False)
 
 class EditDeviceNgoingForm(forms.ModelForm):
     category=forms.ModelChoiceField(queryset=Category.objects.all(),to_field_name='name')
-    place=forms.ModelChoiceField(queryset=Place.objects.all(),to_field_name='name')
+    place=forms.ModelChoiceField(queryset=Place.objects.all(),to_field_name='id')
     
     class Meta:
         model=Input

@@ -60,19 +60,20 @@
                                                 <table id="datatable-buttons" class="table table-striped">
                                         <thead>
                                         <tr>
+                                            <th  style="width:3%">ردیف</th>
                                             <th style="width: 7%">شماره حکم کار</th>
                                             <th style="width: 7%">شماره سریال/اموال</th>
-                                            <th style="width: 5%">نام</th>
+                                            <th style="width: 7%">نام</th>
                                             <th style="width: 7%"> محل مورداستفاده</th>
-                                            <th style="width: 7%">تاریخ ورود</th>
-                                            <th style="width: 7%">تاریخ خروج</th>
-                                            <th style="width: 10%">توضیحات</th>
+                                            <th style="width: 10%">زمان و تاریخ ورود</th>
+                                            <th style="width: 10%">زمان و تاریخ خروج</th>
+                                            <th style="width: 10"> توضیحات</th>
                                             <th style="width: 7%">قطعات نصب شده</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         {% for field in devices %}
-                                        
+                                            <td >{{forloop.counter}}</td>
                                             <td>{{field.work_order_number}}</td>
                                         <a> <td>{{field.serial}}</td></a> 
                                             <td>{{field.category}}-{{field.brand_category.name}}</td>
