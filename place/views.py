@@ -1,6 +1,6 @@
 from ast import Break, Not
 import json
-from persian import convert_en_numbers
+from persian import convert_en_numbers,convert_fa_numbers
 from typing import Union, List, Type
 
 
@@ -10,13 +10,15 @@ from django.shortcuts import get_object_or_404
 from django.db.models import QuerySet, Model
 from django.views import View
 from django.db.models import ProtectedError
-from device.models import Input
+from device.models import DeviceInput
 from django.contrib.auth.mixins import PermissionRequiredMixin,LoginRequiredMixin
 
 from device.views import EditCategory
 from .models import Place, Branch
 from .forms import PlaceForm, Branchform
 from user.permissions import RegistrarPermission
+from user.models import User
+
 
 class EditPlace(LoginRequiredMixin,RegistrarPermission,View):
 
@@ -24,14 +26,18 @@ class EditPlace(LoginRequiredMixin,RegistrarPermission,View):
     place = None
 
     def get(self, request):
-        places = Place.objects.filter(update='no_update')
-        return render(request, "place/form_edit_place.html", context={"places": places})
+        places = Place.objects.all()
+        storekeepers=User.object.filter(role='storekeeper')
+        print(storekeepers)
+        return render(request, "place/form_edit_place.html", context={"places": places,'storekeepers':storekeepers})
 
     def load_data_ajax(request):
         EditPlace.place_id = request.GET.get("place_id")
+        print(EditPlace.place_id)
         EditPlace.place: Place = get_object_or_404(Place, id=int(EditPlace.place_id))
+        print(EditPlace.place)
         return JsonResponse(
-            {"name": EditPlace.place.name, "boss": EditPlace.place.boss,'storekeeper':EditPlace.place.storekeeper}
+            {"name": EditPlace.place.name, "boss": EditPlace.place.boss,'storekeeper':f'{EditPlace.place.storekeeper.first_name} {EditPlace.place.storekeeper.last_name}'}
         )
 
     def ajax_delete(request):
@@ -44,7 +50,7 @@ class EditPlace(LoginRequiredMixin,RegistrarPermission,View):
         return JsonResponse({"msg": "success"})
 
     def obj_exists(self, name: str) -> bool:
-        return Place.objects.filter(name=name,update='no_update').exists()
+        return Place.objects.filter(name=name).exists()
 
     def create(self, data: dict) -> json:
         if self.obj_exists(name=data["name"]):
@@ -56,15 +62,15 @@ class EditPlace(LoginRequiredMixin,RegistrarPermission,View):
         if EditPlace.place.name != data["name"] and \
             self.obj_exists(name=data["name"]):
             return JsonResponse({"msg": "exists"})
-        if EditPlace.place.boss != data["boss"] or EditPlace.place.storekeeper !=data['storekeeper']:
-            print('kkkkkkkkkkkkkkkkkkkkkkk',Input.objects.filter(place_id=EditPlace.place_id).exists())
-            if Input.objects.filter(place_id=EditPlace.place_id).exists():
-                print('bbbbbbbbbbbbbbbbb')
-                Place.objects.filter(id=EditPlace.place_id).update(update='update')
-                place=Place.objects.create(**data)
-                Branch.objects.filter(place_id=EditPlace.place_id).update(place=place)
-            else:
-                Place.objects.filter(id=EditPlace.place_id).update(**data)
+        # if EditPlace.place.boss != data["boss"] or EditPlace.place.storekeeper !=data['storekeeper']:
+        #     if DeviceInput.objects.filter(place_id=EditPlace.place_id).exists():
+        #         print('bbbbbbbbbbbbbbbbb')
+        #         Place.objects.filter(id=EditPlace.place_id).update(update='update')
+        #         place=Place.objects.create(**data)
+        #         Branch.objects.filter(place_id=EditPlace.place_id).update(place=place)
+        #     else:
+        
+        Place.objects.filter(id=EditPlace.place_id).update(**data)
         # Place.objects.filter(id=int(EditPlace.place_id)).update(**data)
         return JsonResponse({"msg": "success"})
 
@@ -72,6 +78,9 @@ class EditPlace(LoginRequiredMixin,RegistrarPermission,View):
         form = PlaceForm(request.POST)
         print(form.errors)
         if form.is_valid():
+            name=convert_fa_numbers(form.cleaned_data.get('name'))
+            boss=convert_fa_numbers(form.cleaned_data.get('boss'))
+            form.cleaned_data.update({'name':name,'boss':boss})
             if "form_add" in form.data:
                 return self.create(data=form.cleaned_data)
             else:
@@ -93,8 +102,8 @@ class EditBranch(LoginRequiredMixin,RegistrarPermission,View):
         :param request: The request object
         :return: A list of all the branchs and places in the database.
         """
-        branchs = Branch.objects.filter(update='no_update')
-        places = Place.objects.filter(update='no_update')
+        branchs = Branch.objects.all()
+        places = Place.objects.all()
         context = {"branchs": branchs, "places": places}
         return render(request, "place/form_edit_branch.html", context=context)
 
@@ -102,7 +111,7 @@ class EditBranch(LoginRequiredMixin,RegistrarPermission,View):
         """
         It checks if a branch exists in the database
         """
-        return Branch.objects.filter(name=data["name"], place=data["place"],update='no_update').exists()
+        return Branch.objects.filter(name=data["name"], place=data["place"]).exists()
 
     def create(self, data: dict) -> json:
         """
@@ -115,17 +124,18 @@ class EditBranch(LoginRequiredMixin,RegistrarPermission,View):
 
     def update(self, data: dict) -> json:
         place_input :Union[QuerySet,list[Place]] = data["place"]
+        print(EditBranch.branch["place"],'ggggggggggggg')
         place=Place.objects.values('id').get(id=EditBranch.branch["place"]) 
   
         if (EditBranch.branch['name'] != data["name"] \
             or place['id'] != place_input.id):
             if self.obj_exists(data):
                 return JsonResponse({"msg": "exists"})
-        if EditBranch.branch['boss'] != data['boss']:
-            if Input.objects.filter(branch_id=EditBranch.branch_id).exists():
-                Branch.objects.filter(id=EditBranch.branch_id).update(update='update')
-                self.create(data)   
-                return JsonResponse({"msg": "success"})
+        # if EditBranch.branch['boss'] != data['boss']:
+        #     if DeviceInput.objects.filter(branch_id=EditBranch.branch_id).exists():
+        #         Branch.objects.filter(id=EditBranch.branch_id)
+        #         self.create(data)   
+        #         return JsonResponse({"msg": "success"})
         Branch.objects.filter(id=EditBranch.branch_id).update(**data)     
         return JsonResponse({"msg": "success"})
 
@@ -135,7 +145,7 @@ class EditBranch(LoginRequiredMixin,RegistrarPermission,View):
         EditBranch.branch: Branch = get_object_or_404(
             Branch, id=int(EditBranch.branch_id)
         )
-        EditBranch.branch=Branch.objects.values('name','boss','place','phone','update').get(id=EditBranch.branch_id)
+        EditBranch.branch=Branch.objects.values('name','boss','place','phone').get(id=EditBranch.branch_id)
         return JsonResponse(EditBranch.branch)
 
     def ajax_delete(request):
@@ -150,6 +160,13 @@ class EditBranch(LoginRequiredMixin,RegistrarPermission,View):
     def post(self, request):
         form = Branchform(request.POST)
         if form.is_valid():
+            form.cleaned_data.update(
+                {
+                    'name':convert_fa_numbers(form.cleaned_data.get('name')),
+                    'boss':convert_fa_numbers(form.cleaned_data.get('boss'))
+                }
+            )
+            print(form.cleaned_data)
             if "form_add" in form.data:
                 return self.create(data=form.cleaned_data)
             else:

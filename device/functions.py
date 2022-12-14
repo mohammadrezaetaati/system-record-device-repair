@@ -18,8 +18,9 @@ def g_to_p() -> str:
 
 def save_date_time():
     time = date.now()
-    time_now = time.time().strftime("%H:%M")
-    return f"{ time_now} {g_to_p()}  "
+    time_now = time.time().strftime("%H:%M:%S")
+    return f"{g_to_p()} {time_now}"
+    # return time_now
 
 def create_work_order_number(work_order_number:str, date_string=g_to_p()) -> str:
 

@@ -8,12 +8,16 @@ import place
 
 from place.models import Branch, Place
 
-from .models import Input,Category,BrandCategory,Part
+from .models import DeviceInput,Category,BrandCategory,Part
 
 class OperationForm(forms.Form):
     serial = forms.CharField(max_length=255)
     
+class PrintWorkOrderForm(forms.ModelForm):
 
+    class Meta:
+        model = DeviceInput
+        fields = ['work_order_number']
 
 class AddDeviceForm(forms.ModelForm):
     category=forms.ModelChoiceField(queryset=Category.objects.all(),to_field_name='name')
@@ -22,10 +26,19 @@ class AddDeviceForm(forms.ModelForm):
     branch=forms.ModelChoiceField(queryset=Branch.objects.all(),to_field_name='id')
 
     class Meta:
-        model=Input
+        model=DeviceInput
         # exclude=('parts','work_order_number','serial','status','transferee',)
-        fields=['category','brand_category','place','branch','problem','delivery','serial']
+        fields=['category','brand_category','branch','problem','serial','place','delivery']
 
+# class DeviceRequestForm(forms.ModelForm):
+#     category=forms.ModelChoiceField(queryset=Category.objects.all(),to_field_name='name')
+#     brand_category=forms.ModelChoiceField(queryset=BrandCategory.objects.all(),to_field_name='id')
+#     place=forms.ModelChoiceField(queryset=Place.objects.all(),to_field_name='id')
+#     branch=forms.ModelChoiceField(queryset=Branch.objects.all(),to_field_name='id')
+
+#     class Meta:
+#         model = DeviceRequest
+#         exclude = ('status',)
 
 
 class CategoryForm(forms.Form):
@@ -79,7 +92,7 @@ class EditDeviceNgoingForm(forms.ModelForm):
     place=forms.ModelChoiceField(queryset=Place.objects.all(),to_field_name='id')
     
     class Meta:
-        model=Input
+        model=DeviceInput
         exclude=('work_order_number','entry_date','exit_date','delivery_operator','transferee','transferee_operator','parts','description','status')
     
 class DeviceProvidestatus(forms.Form):

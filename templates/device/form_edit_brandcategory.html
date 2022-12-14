@@ -36,7 +36,7 @@
                     
                     
                         <div class="x_content">
-                    <form id="formCategory" class="form-horizontal form-label-left" novalidate method="post" action="{%url 'edit-brand-category'%}" data-brands-category-url="{% url 'ajax_load_brands-category' %}">
+                    <form id="formCategory" class="form-horizontal form-label-left"  method="post" action="{%url 'edit-brand-category'%}" data-brands-category-url="{% url 'ajax_load_brands-category' %}">
                             {% csrf_token %}
                             {% comment %} <span class="section"> ویرایش</span> {% endcomment %} 
                             {% if error %}
@@ -47,8 +47,8 @@
                             <div class="item form-group" >
                             </div>
                         <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">نام<span
-                                        class="required">*</span>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">دسته:<span
+                                        class="required"></span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                       <select id="SelectCategory" class="form-control" required=""  searchable="Search here.."  name="category">
@@ -62,17 +62,17 @@
                         </form>
                        
                             
-                        {% if user.add or user.rol == 'adminstrator' %}
+                        {% if user.add or user.role == 'adminstrator' %}
                             <center> <button id="send"  class="btn btn-success" onclick="jQuery('#formAdd').slideDown(700);">افزودن</button>
                         {% else %}
                             <center> <button id="send"  class="btn btn-success" onclick="jQuery('#formAdd').slideDown(700);" disabled="disabled">افزودن</button>
                         {% endif %}
-                        {% if user.edit or user.rol == 'adminstrator' %}
+                        {% if user.edit or user.role == 'adminstrator' %}
                             <button id="send" type="submit" class="btn btn-warning" onclick="jQuery('#formedit').slideDown(700);">ویرایش</button>
                         {% else %}
                             <button id="send" type="submit" class="btn btn-warning" onclick="jQuery('#formedit').slideDown(700);" disabled="disabled" >ویرایش</button>
                         {% endif %}
-                        {% if user.delete or user.rol == 'adminstrator' %}
+                        {% if user.delete or user.role == 'adminstrator' %}
                             <button id="send" type="submit" class="btn btn-danger" onclick="jQuery('#formDelete').slideDown(700);">حذف</button></center> 
                         {% else %}
                             <button id="send" type="submit" class="btn btn-danger" onclick="jQuery('#formDelete').slideDown(700);" disabled="disabled" >حذف</button></center> 
@@ -80,7 +80,7 @@
 
                             <div class="ln_solid" ></div>
                         <div>
-                        <form id="formAdd" class="form-horizontal form-label-left" novalidate method="post" style="display: none;" >
+                        <form id="formAdd" class="form-horizontal form-label-left"  method="post" style="display: none;" >
                             {% csrf_token %}
                           {% comment %} <span class="section"> باحذف یک دسته </span> {% endcomment %}
                           
@@ -88,12 +88,13 @@
                             </div>
                         <input type="hidden" name="add">
                         <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">نام<span
-                                        class="required">*</span>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">برند:<span
+                                        class="required"></span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                   <input id="hidden" type="hidden" name="hidden">
-                                    <input id="update_name" required="required" name="create_name"
+                            
+                                    <input id="update_name" required="" name="create_name"
                                               class="form-control col-md-7 col-xs-12"></textarea>
                                 </div>
                             </div>
@@ -105,7 +106,7 @@
                             </div>
                         </form>
                             <div class="ln_solid"></div>
-                           <form id="formedit" class="form-horizontal form-label-left" novalidate method='post' style="display: none;" >
+                           <form id="formedit" class="form-horizontal form-label-left"  method='post' style="display: none;" >
                             {% csrf_token %}
                             {% comment %} <span class="section"> ویرایش</span> {% endcomment %}
                             {% if error %}
@@ -117,24 +118,23 @@
                             <div class="item form-group" >
                             </div>
                             <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">نام دسته<span
-                                        class="required">*</span>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">برند:<span
+                                        class="required"></span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12"  id="show" >
                                   <input id="hidden1" type="hidden" name="hidden">
 
                                    <select id="SelectBrandCategory" class="form-control" required=""  searchable="Search here.."  name="brandcategory">
-                                        <option value=''>انتخاب...</option>
+                                        <option value=''>دسته موردنظر راانتخاب کنید</option>
                                     </select>
                                 </div>
                                 </div>
                         <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea"> نام جدید<span
-                                        class="required">*</span>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea"> برند جدید:<span
+                                        class="required"></span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input id="update_name" required="required" name="update_name"
-                                              class="form-control col-md-7 col-xs-12"></textarea>
+                                    <input type="text" id="update_name" class="form-control" required="" name="update_name">
                                 </div>
                             </div>
                             
@@ -145,7 +145,7 @@
                             </div>
                         </form>
                             <div class="ln_solid"></div>
-                           <form id="formDelete" class="form-horizontal form-label-left" novalidate method="post" style="display: none;" >
+                           <form id="formDelete" class="form-horizontal form-label-left"  method="post" style="display: none;" >
                             {% csrf_token %}
                           {% comment %} <span class="section"> باحذف یک دسته </span> {% endcomment %}
                           
@@ -154,13 +154,13 @@
                         <input type="hidden" name="delete">
 
                         <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">نام<span
-                                        class="required">*</span>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">برند:<span
+                                        class="required"></span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                
                                        <select id="SelectBrandCategoryDelete" class="form-control" required=""  searchable="Search here.." multiple="multiple" name="brandcategory">
-                                        <option value=''>انتخاب...</option>
+                                        <option value=''>دسته موردنظر راانتخاب کنید</option>
                                     </select>
                                 </div>
                             </div>
@@ -268,7 +268,10 @@
                     alert('با موفقیت ثبت شد')
                     formd.reset() 
                 } else if (data.msg == 'exists'){ 
-                    alert('این دسته از قبل وارد شده است')
+                    alert('این برند از قبل وارد شده است')
+                    
+                } else if (data.msg == 'ObjectDoesNotExist'){ 
+                    alert('لطفا دسته مورد نظر برای اضافه کردن را انتخاب کنید.')
                     
                 }
             },
@@ -301,7 +304,7 @@
                     alert('ویرایش انحام شد')
                     formed.reset() 
                 } else if (data.msg == 'exists'){ 
-                    alert('این دسته از قبل وارد شده است')
+                    alert('این برند از قبل وارد شده است')
                     
                 }
             },

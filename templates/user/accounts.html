@@ -3,11 +3,52 @@
 {% block content %}
 {%load static %}
 <div class="right_col" role="main">
+    <div class="title_left">
+        <h3>کاربران</h3>
+    </div>
+    <!-- top tiles -->
+    <div class="row tile_count">
+        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-user"></i> تعداد کل </span>
+            <div class="count">{{number_all_user}}</div>
+        </div>
+        {% for user in number_users %}
+                {% comment %} {{number.role}}: {{number.count}} {% endcomment %}
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            {% if user.role == 'administrator' %}
+                <span class="count_top"><i class="fa fa-user"></i> تعداد مدیران سیستم</span>
+            {% elif user.role == 'registrar' %}
+                <span class="count_top"><i class="fa fa-user"></i> تعداد ثبت کنندگان</span>
+            {% elif user.role == 'storekeeper' %}
+                <span class="count_top"><i class="fa fa-user"></i> تعداد انبارداران </span>
+            {% else %}
+                <span class="count_top"><i class="fa fa-user"></i> تعداد گزارش دهندگان </span>
+            {% endif %}
+                <div class="count">{{user.count}}</div>
+                
+            </div> 
+            
+        {% endfor %}
+        
+       
+    </div>
+    <!-- /top tiles -->
     <div class="">
         <div class="page-title">
-            <div class="title_left">
-                <h3>حساب ها</h3>
+              <div class="title_right" >
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                    <form >
+                        <div class="input-group">
+                            <input type="text" class="form-control"  required='' placeholder="جست و جو" name="search">
+                            <span class="input-group-btn">
+                            <!-- <input type="submit" > -->
+                            <input class="btn btn-default" type="submit" value="برو">
+                            </span>
+                        </div>
+                    </form>
+                </div>
             </div>
+     
             <div class="title_right">
                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                     <div class="input-group">
@@ -83,6 +124,8 @@
                                                     <li><i class="fa fa-child"></i> سمت: گزارش دهنده</li>
                                                 {% elif account.role == 'registrar'%}
                                                     <li><i class="fa fa-child"></i> سمت: ثبت کننده</li>
+                                                {% elif account.role == 'storekeeper'%}
+                                                    <li><i class="fa fa-child"></i> سمت: انباردار</li>
                                                 {% endif %}
 
                                             </ul>
@@ -93,7 +136,7 @@
                                     </div>
                                     <div class="col-xs-12 bottom text-center">
                                         <div class="col-xs-12 col-sm-6 emphasis">
-                                            <a href="#" class="btn btn-primary btn-xs"><i class="fa  fa-user"></i> مشاهده </a>
+                                            <a href="{%url 'user-informations' account.id%}" class="btn btn-primary btn-xs"><i class="fa fa-user"></i> مشاهده </a>
                                             <div class="btn-group" >
                                                 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle btn btn-info btn-xs" type="button" aria-expanded="false" style='top: -3px;'><i class="fa fa-pencil"></i> ویرایش<span class="caret"></span></button>
                                                 <ul class="dropdown-menu">

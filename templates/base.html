@@ -66,7 +66,7 @@
     <div class="container body">
         <div class="main_container">
             <div class="col-md-3 left_col hidden-print">
-                <div class="left_col scroll-view">
+                <div class="left_col scroll-view" >
                     <div class="navbar nav_title" style="border: 0;">
                         <span class="site_title">تعمیرگاه مدیریت فاوا</span>
                     </div>
@@ -89,85 +89,118 @@
                     <!-- /menu profile quick info -->
 
                     <br />
-
-                    <!-- sidebar menu -->
-                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-                        <div class="menu_section">
-                            {% comment %} <h3>عمومی</h3> {% endcomment %}
-                            
-                            <ul class="nav side-menu">
-                                   {% if user.add or user.edit or user.delete or user.change_status %}
-                                    <li><a href="{%url 'add-device'%}"><i class="fa fa-edit"></i>ثبت دستگاه<span ></span></a>
-                                {% else %}
-                                    <li style="pointer-events:none ;"><a ><i class="fa fa-edit"></i>ثبت دستگاه <span ></span></a>
-                                {% endif %}
-                                <li><a><i class="fa fa-home"></i> خانه <span class="fa fa-chevron-down"></span></a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="index.html">داشبورد</a></li>
-                                        <li><a href="index2.html">داشبورد ۲</a></li>
-                                        <li><a href="index3.html">داشبورد ۳</a></li>
-                                    </ul>
-                                </li>
-                         
-                          
-                                {% if user.add or user.edit or user.delete or user.change_status %}
-                                    <li><a><i class="fa fa-desktop"></i> اضافه کردن<span class="fa fa-chevron-down"></span></a>
-                                {% else %}
-                                    <li style="pointer-events:none ;"><a><i class="fa fa-desktop"></i> اضافه کردن<span class="fa fa-chevron-down"></span></a>
-                                {% endif %}
-                                    <ul class="nav child_menu">
-                                        <li><a href="{% url 'add-category'%}">دسته بندی</a></li>
-                                        <li><a href="{% url 'edit-brand-category'%}">برند</a></li>
-                                        <li><a href="{%url 'edit-place'%}">محل مورد استفاده</a></li>
-                                        <li><a href="{%url 'edit-branch' %}">قسمت</a></li>
-                                        <li><a href="{%url 'edit-part'%}">قطعات</a></li>
-                                    </ul>
-                                </li>
-                                {% if user.add or user.edit or user.delete or user.change_status %}
-                                    <li><a><i class="fa fa-table"></i> دستگاه های ثبت شده <span
-                                            class="fa fa-chevron-down"></span></a>
-                                {% else %}
-                                    <li style="pointer-events:none ;"><a><i class="fa fa-table"></i> دستگاه های ثبت شده <span
-                                                class="fa fa-chevron-down"></span></a>
-                                {% endif %}
-                                    <ul class="nav child_menu">
-                                        <li><a href="{%url 'device-provide'%}">آماده به تحویل</a></li>
-                                        <li><a href="{%url 'device-ngoing'%}"> دردست اقدام</a></li>
-                                        <li><a href="{%url 'device-repair-city'%}">تعمیردرشهر</a></li>
-                                        <li><a href="{%url 'device-unrepairable'%}">غیرقابل تعمیر</a></li>
-                                        <li><a href="{%url 'device-all'%}"> همه</a></li>
-                                        <li><a href="{%url 'device-print'%}"> چاپ</a></li>
-                                    </ul>
-                                </li>
-                                <li><a><i class="fa fa-bar-chart-o"></i> ارائه داده <span
-                                            class="fa fa-chevron-down"></span></a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="chartjs.html">Chart JS</a></li>
-                                        <li><a href="chartjs2.html">Chart JS2</a></li>
-                                        <li><a href="morisjs.html">Moris JS</a></li>
-                                        <li><a href="echarts.html">ECharts</a></li>
-                                        <li><a href="other_charts.html">چارت های دیگر</a></li>
-                                    </ul>
-                                </li>
-                                {% if user.role == 'administrator' %}
-                                    <li><a><i class="fa fa-clone"></i>حساب کاربری<span
-                                            class="fa fa-chevron-down"></span></a>
-                                {% else %}
-                                  <li style="pointer-events:none ;"><a><i class="fa fa-clone"></i>حساب کاربری<span
-                                            class="fa fa-chevron-down"></span></a>
-                                {% endif %} 
-                                
-                                    <ul class="nav child_menu">
-                                        <li><a href="{%url 'singup'%}">ایجاد حساب</a></li>
-                                        <li><a href="{%url 'accounts'%}"> حساب ها</a></li>
-
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-      
-                   
+                  
                     
+                    <!-- sidebar menu -->
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu" >
+                    {% if user.is_first_login == False %}
+
+                        {% if request.user.role == 'storekeeper' %}
+                            <div class="menu_section">
+                                
+                                <ul class="nav side-menu">
+                                <h3>ثبت</h3>      
+                                        <li><a href="{%url 'add-device'%}"><i class="fa fa-edit"></i>ثبت حکم کار<span ></span></a>
+                                        </ul>
+                                    </div>
+                                    <div class="menu_section">
+                                <h3>حکم کارهای</h3>
+                                <ul class="nav side-menu">
+                                        <li><a href="{%url 'device-waiting'%}"><i class="fa fa-coffee"></i>درحال بررسی<span ></span></a>
+                                        <li><a href="{%url 'device-ngoing'%}"><i class="fa fa-wrench"></i>دردست اقدام<span ></span></a>
+                                        <li><a href="{%url 'device-provide'%}"><i class="fa fa-check"></i>آماده به تحویل<span ></span></a>
+                                        <li><a href="{%url 'device-repair-city'%}"><i class="fa fa-truck"></i>تعمیردرشهر<span ></span></a>
+                                        <li><a href="{%url 'device-unrepairable'%}"><i class="fa fa-close"></i>غیرقابل تعمیر<span ></span></a>
+                                        </ul>
+                                    </div>
+
+                                <div class="menu_section">
+                                    <h3>چاپ</h3>
+                                        <ul class="nav side-menu">
+                                            <li><a href="{% url 'print-work-order' %}"><i class="fa fa-print"></i>چاپ حکم کار<span ></span></a>
+                                        </ul>
+                                </div>
+                                <div class="menu_section">
+                                    <h3>حساب کاربری</h3>
+                                        <ul class="nav side-menu">
+                                            <li><a href="{% url 'edit-password-user' request.user.id %}"><i class="fa fa-key"></i> تغییررمزعبور<span ></span></a>
+                                        </ul>
+                                    </div>
+                                
+                                {% else %}
+                                <div class="menu_section">
+                                {% comment %} <h3>حساب کاربری</h3> {% endcomment %}
+                                <ul class="nav side-menu">
+                                <ul class="nav side-menu">
+                                    <li><a><i class="fa fa-home"></i> خانه <span class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
+                                            <li><a href="index.html">داشبورد</a></li>
+                                            <li><a href="index2.html">داشبورد ۲</a></li>
+                                            <li><a href="index3.html">داشبورد ۳</a></li>
+                                        </ul>
+                                    </li>
+
+                                        <li><a href="{%url 'device-new'%}"><i class="fa fa-edit"></i>دستگاه های جدید<span ></span></a>
+                            
+                                    {% if request.user.role == 'administrator' or request.user.role == 'registrar' %}
+                                        <li><a><i class="fa fa-desktop"></i> اضافه کردن<span class="fa fa-chevron-down"></span></a>
+                                    {% else %}
+                                        <li style="pointer-events:none ;"><a><i class="fa fa-desktop"></i> اضافه کردن<span class="fa fa-chevron-down"></span></a>
+                                    {% endif %}
+                                        <ul class="nav child_menu">
+                                            <li><a href="{% url 'add-category'%}">دسته بندی</a></li>
+                                            <li><a href="{% url 'edit-brand-category'%}">برند</a></li>
+                                            <li><a href="{%url 'edit-place'%}">محل مورد استفاده</a></li>
+                                            <li><a href="{%url 'edit-branch' %}">قسمت</a></li>
+                                            <li><a href="{%url 'edit-part'%}">قطعات</a></li>
+                                        </ul>
+                                    </li>
+                                    {% if request.user.role == 'administrator' or request.user.role == 'registrar'  %}
+                                        <li><a><i class="fa fa-table"></i> دستگاه های ثبت شده <span
+                                                class="fa fa-chevron-down"></span></a>
+                                    {% else %}
+                                        <li style="pointer-events:none ;"><a><i class="fa fa-table"></i> دستگاه های ثبت شده <span
+                                                    class="fa fa-chevron-down"></span></a>
+                                    {% endif %}
+                                        <ul class="nav child_menu">
+                                            <li><a href="{%url 'device-provide'%}">آماده به تحویل</a></li>
+                                            <li><a href="{%url 'device-ngoing'%}"> دردست اقدام</a></li>
+                                            <li><a href="{%url 'device-repair-city'%}">تعمیردرشهر</a></li>
+                                            <li><a href="{%url 'device-unrepairable'%}">غیرقابل تعمیر</a></li>
+                                            <li><a href="{%url 'device-all'%}"> همه</a></li>
+                                            <li><a href="{%url 'device-print'%}"> چاپ</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a><i class="fa fa-bar-chart-o"></i> ارائه داده <span
+                                                class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
+                                            <li><a href="chartjs.html">Chart JS</a></li>
+                                            <li><a href="chartjs2.html">Chart JS2</a></li>
+                                            <li><a href="morisjs.html">Moris JS</a></li>
+                                            <li><a href="echarts.html">ECharts</a></li>
+                                            <li><a href="other_charts.html">چارت های دیگر</a></li>
+                                        </ul>
+                                    </li>
+                                    {% if request.user.role == 'administrator' %}
+                                        <li><a><i class="fa fa-clone"></i>حساب کاربری<span
+                                                class="fa fa-chevron-down"></span></a>
+                                    {% else %}
+                                    <li style="pointer-events:none ;"><a><i class="fa fa-clone"></i>حساب کاربری<span
+                                                class="fa fa-chevron-down"></span></a>
+                                    {% endif %} 
+                                    
+                                        <ul class="nav child_menu">
+                                            <li><a href="{%url 'create-user'%}">ایجاد حساب</a></li>
+                                            <li><a href="{%url 'accounts'%}"> حساب ها</a></li>
+
+                                        </ul>
+                                    </li>
+                                </ul>
+                    
+
+                            </div>
+                        {% endif %}
+                     {% endif %}
                         </div>
 
                     </div>
@@ -191,31 +224,34 @@
             </div>
 
             <!-- top navigation -->
-            <div class="top_nav hidden-print">
-                <div class="nav_menu">
-                    <nav>
-                        <div class="nav toggle">
-                            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
-                        </div>
+            {% if user.is_first_login == False %}
+                <div class="top_nav hidden-print">
+                    <div class="nav_menu">
+                        <nav>
+                            <div class="nav toggle">
+                                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                            </div>
 
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="">
-                                <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
-                                    aria-expanded="false">
-                                   {{request.user.username}}
-                                    <span class=" fa fa-angle-down"></span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                    <li><a href="{% url 'edit-password-user' user.id %}">تغییررمزعبور</a></li>
-                                    <li><a href="{%url 'logout'%}"><i class="fa fa-sign-out pull-right"></i> خروج</a>
-                                    </li>
-                                </ul>
-                            </li>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="">
+                                    <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
+                                        aria-expanded="false">
+                                    {{request.user.username}}
+                                        <span class=" fa fa-angle-down"></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                        <li><a href="{% url 'edit-password-user' user.id %}">تغییررمزعبور</a></li>
+                                        <li><a href="{%url 'logout'%}"><i class="fa fa-sign-out pull-right"></i> خروج</a>
+                                        </li>
+                                    </ul>
+                                </li>
 
-                        </ul>
-                    </nav>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
+        
             <!-- /top navigation -->
             <!-- /header content -->
 
@@ -278,6 +314,7 @@
     <script src="{% static 'vendors/fullcalendar/dist/lang/fa.js' %}"></script>
 
     <!-- Datatables -->
+    
     <script src="{% static 'vendors/datatables.net/js/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendors/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
     <script src="{% static 'vendors/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
@@ -287,6 +324,7 @@
     <script src="{% static 'vendors/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
     <script src="{% static 'vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js' %}"></script>
     <script src="{% static 'vendors/datatables.net-keytable/js/dataTables.keyTable.min.js' %}"></script>
+    
     <script src="{% static 'vendors/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
     <script src="{% static 'vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js' %}"></script>
     <script src="{% static 'vendors/datatables.net-scroller/js/dataTables.scroller.min.js' %}"></script>

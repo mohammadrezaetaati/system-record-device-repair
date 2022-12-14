@@ -1,9 +1,10 @@
 
 
-from ast import parse
+
 import json
-from multiprocessing import context
-from unicodedata import category
+from urllib import request
+
+
 from persian import convert_en_numbers,convert_fa_numbers
 from typing import Union,List
 
@@ -17,16 +18,114 @@ from django.db.models import QuerySet,ProtectedError
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.db.models import Q,Max
 
 from .forms import EditBrandCategoryForm, \
     OperationForm, AddDeviceForm,CategoryForm,\
         EditPartsForm,EditStatusForm,EditDeviceNgoingForm,\
-            DeviceProvidestatus,DeviceUnrepairableForm
-from .models import Input,Category,BrandCategory,Part,NumberPart
+            DeviceProvidestatus,DeviceUnrepairableForm,PrintWorkOrderForm
+from .models import DeviceInput,Category,BrandCategory,Part,NumberPart
 from place.models import Branch, Place
-from user.permissions import RegistrarPermission,AdministratorPermission
-from .functions import create_work_order_number,save_date_time
+from user.permissions import RegistrarPermission,AdministratorPermission,StoreKeeperPermission
+from .functions import create_work_order_number, g_to_p,save_date_time
+
+import io
+import os
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from arabic_reshaper import reshape
+from bidi.algorithm import get_display
+import reportlab
+
+
+
+
+class PrintWorkOrder(View):
+
+    # model = DeviceInput
+    # template_name = 'device/print-work-order.html'
+    # fields = ['work_order_number',]
+    # success_url = '/device/add/'
+    def get(self,request):
+        return render(request,'device/print-work-order.html')
+    # def form_invalid(self, form) -> HttpResponse:
+    #     print(form.errors.get_json_data())
+    #     return JsonResponse(form.errors.get_json_data())
+
+    # def form_valid(self, form) -> HttpResponse:
+    #     # print(self.get_object())
+    #     print(form.data)
+    #     buffer = io.BytesIO()
+    #     p = canvas.Canvas(buffer)
+    #     font='static/build/fonts/B_Yekan.ttf'
+    #     pdfmetrics.registerFont(TTFont('B_Yekan.ttf', font))
+    #     p.setFont('B_Yekan.ttf',20)
+    #     p.drawString(300, 700,get_display(reshape('بسمه تعالی')))
+    #     p.drawString(300, 200,get_display(reshape('چه خبر')))
+    #     p.drawImage('static/images/god.png',100,500,width=100,height=50)
+    #     p.showPage()
+    #     p.save()
+    #     buffer.seek(0)
+    #     print('bbbbbbbbbbbbb')
+    #     return FileResponse(buffer, as_attachment=True, filename='heloo.pdf')
+
+        # return super().form_valid(form)
+    def post(self, request):
+        form=PrintWorkOrderForm(request.POST)
+        if form.errors:
+            return JsonResponse(form.errors.get_json_data())
+
+        print(request.POST)
+        buffer = io.BytesIO()
+        p = canvas.Canvas(buffer)
+        font='static/build/fonts/B_Yekan.ttf'
+        pdfmetrics.registerFont(TTFont('B_Yekan.ttf', font))
+        p.setFont('B_Yekan.ttf',20)
+        p.drawString(300, 700,get_display(reshape('بسمه تعالی')))
+        p.drawString(300, 200,get_display(reshape('چه خبر')))
+        p.drawImage('static/images/god.png',100,500,width=100,height=50)
+        p.showPage()
+        p.save()
+        buffer.seek(0)
+        # return render(request,'device/device_all.html')
+        # return redirect('/device/add/')
+        # return HttpResponse('device/device_all.html')
+
+        return FileResponse(buffer, as_attachment=True, filename='heloo.pdf')
+
+        # return super().post(request, *args, **kwargs)
+    # def post(self,request):
+        
+    #     buffer = io.BytesIO()
+    #     p = canvas.Canvas(buffer)
+    #     font='static/build/fonts/B_Yekan.ttf'
+    #     pdfmetrics.registerFont(TTFont('B_Yekan.ttf', font))
+    #     p.setFont('B_Yekan.ttf',20)
+    #     p.drawString(300, 700,get_display(reshape('بسمه تعالی')))
+    #     p.drawString(300, 200,get_display(reshape('چه خبر')))
+    #     p.drawImage('static/images/god.png',100,500,width=100,height=50)
+    #     p.showPage()
+    #     p.save()
+    #     buffer.seek(0)
+    #     return FileResponse(buffer, as_attachment=True, filename='heloo.pdf')
+
+
+def print_work_order(request):
+
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer)
+    font='static/build/fonts/B_Yekan.ttf'
+    pdfmetrics.registerFont(TTFont('B_Yekan.ttf', font))
+    p.setFont('B_Yekan.ttf',20)
+    p.drawString(300, 700,get_display(reshape('بسمه تعالی')))
+    p.drawString(300, 200,get_display(reshape('چه خبر')))
+    p.drawImage('static/images/god.png',100,500,width=100,height=50)
+    p.showPage()
+    p.save()
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='heloo.pdf')
 
 
 user = get_user_model()
@@ -34,35 +133,41 @@ user = get_user_model()
 def home(request):
     return render(request,'device/index.html')
     
-class SeeAllDevice(LoginRequiredMixin,RegistrarPermission,AdministratorPermission,ListView):
-    model = Input
+class SeeAllDevice(LoginRequiredMixin,RegistrarPermission,ListView):
+    model = DeviceInput
     template_name = "device/device_all.html"
     context_object_name = "devices"
 
+    def get_queryset(self):
+        print(self.request.GET)
+        return super().get_queryset()
 
-class DeviceNgoing(LoginRequiredMixin,RegistrarPermission,View):
+
+class DeviceNgoing(LoginRequiredMixin,StoreKeeperPermission,View):
     device_id=None
     device=None
 
     def get(self,request):
-        a=Input.objects.get(id=3)
-        form=AddDeviceForm(request.GET,instance=a)
-        devices=Input.objects.filter(status='ngoing')
+        user=request.user
+        if user.role == 'storekeeper':
+            devices = DeviceInput.objects.filter(status='ngoing',place__storekeeper__username=user)
+        else:
+            devices=DeviceInput.objects.filter(status='ngoing')
 
-        print(devices,'llllll')
-        places=Place.objects.filter(update='no_update')
+        places=Place.objects.all()
         category=Category.objects.all()
-        return render(request,'device/devices_ngoing.html',context={'devices':devices,'places':places,'category':category,'form':form})
+        return render(request,'device/devices_ngoing.html',context={'devices':devices,'places':places,'category':category})
 
     def load_part_table_ajax(request):
         DeviceNgoing.device_id=request.GET.get('device_id')
-        category=Category.objects.get(input=DeviceNgoing.device_id)
-        parts=Part.objects.filter(category=category)
+        device=DeviceInput.objects.get(id=DeviceNgoing.device_id)
+        print(device.category)
+        parts=Part.objects.filter(category=device.category)
         return JsonResponse(list(parts.values('name','brand','id')),safe=False)
     
     def load_data_ajax(request):
         DeviceNgoing.device_id = request.GET.get("device_id")
-        DeviceNgoing.device: Input = Input.objects.get(id=int(DeviceNgoing.device_id))
+        DeviceNgoing.device: DeviceInput = DeviceInput.objects.get(id=int(DeviceNgoing.device_id))
  
         # return JsonResponse(list(DeviceNgoing.device.values('branch','delivery','transferee_operator')),safe=False)
     
@@ -87,7 +192,7 @@ class DeviceNgoing(LoginRequiredMixin,RegistrarPermission,View):
     def obj_exists(self, data: str) -> bool:
 
         try:
-            input=Input.objects.get(serial=convert_fa_numbers(data))
+            input=DeviceInput.objects.get(serial=convert_fa_numbers(data))
             if input.status != 'finished':
                 return True
         except ObjectDoesNotExist:
@@ -97,18 +202,18 @@ class DeviceNgoing(LoginRequiredMixin,RegistrarPermission,View):
         if DeviceNgoing.device.serial != data["serial"]:
             if self.obj_exists(data=data["serial"]):
                 return JsonResponse({"msg": "exists"})
-        Input.objects.filter(id=DeviceNgoing.device_id).update(serial=convert_fa_numbers(data.pop('serial')),**data)
+        DeviceInput.objects.filter(id=DeviceNgoing.device_id).update(serial=convert_fa_numbers(data.pop('serial')),**data)
         return JsonResponse({"msg": "success"})
 
     def ajax_delete(request):
         device_id = request.GET.get("device_id")
-        input: Input = get_object_or_404(Input, id=int(device_id))
+        input: DeviceInput = get_object_or_404(DeviceInput, id=int(device_id))
         input.delete()
         return JsonResponse({"msg": "success"})
     
     def ajax_repair_city(request):
         device_id = request.GET.get("device_id")
-        Input.objects.filter(id=device_id).update(status='repair_city',repair_city_date=save_date_time()) 
+        DeviceInput.objects.filter(id=device_id).update(status='repair_city',repair_city_date=save_date_time()) 
         return JsonResponse({"msg": "success"})
 
     def post(self,request):
@@ -116,7 +221,7 @@ class DeviceNgoing(LoginRequiredMixin,RegistrarPermission,View):
             form=DeviceUnrepairableForm(request.POST)
             if form.is_valid():
                 print(form.cleaned_data)
-                Input.objects.filter(id=DeviceNgoing.device_id).update(
+                DeviceInput.objects.filter(id=DeviceNgoing.device_id).update(
                     status='unrepairable',
                     **form.cleaned_data,
                     exit_date=save_date_time(),
@@ -131,7 +236,7 @@ class DeviceNgoing(LoginRequiredMixin,RegistrarPermission,View):
             print(form.errors,'jjjjjjjjjjjjjjj')
             if form.is_valid():
                 return self.update(form.cleaned_data)
-        input:Input=Input.objects.get(id=DeviceNgoing.device_id)
+        input:DeviceInput=DeviceInput.objects.get(id=DeviceNgoing.device_id)
         part=None
         for data in request.POST:
             if len(request.POST.getlist(data))>1 :
@@ -187,8 +292,12 @@ class DeviceNgoing(LoginRequiredMixin,RegistrarPermission,View):
 class DeviceRepairCity(DeviceNgoing):
     
     def get(self,request):
-        devices=Input.objects.filter(status='repair_city')
-        places=Place.objects.filter(update='no_update')
+        user=request.user
+        if user.role == 'storekeeper':
+            devices = DeviceInput.objects.filter(status='repair_city',place__storekeeper__username=user)
+        else:
+            devices=DeviceInput.objects.filter(status='repair_city')
+        places=Place.objects.all()
         category=Category.objects.all()
         context={
             'devices':devices,
@@ -201,8 +310,12 @@ class DeviceRepairCity(DeviceNgoing):
 class DeviceUnrepairable(DeviceNgoing):
     
     def get(self,request):
-        devices=Input.objects.filter(status='unrepairable')
-        places=Place.objects.filter(update='no_update')
+        user=request.user
+        if user.role == 'storekeeper':
+            devices = DeviceInput.objects.filter(status='unrepairable',place__storekeeper__username=user)
+        else:
+            devices=DeviceInput.objects.filter(status='unrepairable')
+        places=Place.objects.all()
         category=Category.objects.all()
         context={
             'devices':devices,
@@ -211,11 +324,15 @@ class DeviceUnrepairable(DeviceNgoing):
         }
         return render(request,'device/device_unrepairable.html',context=context)
 
-class DeviceProvide(LoginRequiredMixin,RegistrarPermission,View):
+class DeviceProvide(LoginRequiredMixin,StoreKeeperPermission,View):
     device_id=None
     def get(self,request):
-        devices=Input.objects.filter(status='provide')
-        places=Place.objects.filter(update='no_update')
+        user=request.user
+        if user.role == 'storekeeper':
+            devices = DeviceInput.objects.filter(status='provide',place__storekeeper__username=user)
+        else:
+            devices=DeviceInput.objects.filter(status='provide')
+        places=Place.objects.all()
         category=Category.objects.all()
         context={
             'devices':devices,
@@ -231,7 +348,7 @@ class DeviceProvide(LoginRequiredMixin,RegistrarPermission,View):
 
     def return_status_ngoing(request):
         device_id=request.GET.get('device_id')
-        input:Input=Input.objects.get(id=device_id)
+        input:DeviceInput=DeviceInput.objects.get(id=device_id)
         input.parts.clear()
         input.description= '-'
         input.exit_date='-'
@@ -241,7 +358,7 @@ class DeviceProvide(LoginRequiredMixin,RegistrarPermission,View):
         return JsonResponse({"msg": "success"})
         
     def edit_status_provide(self,data:dict,user):
-        Input.objects.filter(id=DeviceProvide.device_id)\
+        DeviceInput.objects.filter(id=DeviceProvide.device_id)\
             .update(
                 transferee=data.get('delivery'),
                 delivery_operator=user,
@@ -264,7 +381,7 @@ class DeviceProvide(LoginRequiredMixin,RegistrarPermission,View):
 class DevicePrint(LoginRequiredMixin,RegistrarPermission,View):
 
     def get(self,request):
-        devices=Input.objects.all()
+        devices=DeviceInput.objects.all()
         return render(request,'device/device_print.html',context={'devices':devices})
 
 
@@ -323,27 +440,34 @@ class EditStatus(View):
                 if form.is_valid():
                     part=NumberPart.objects.get_or_create(number=form.cleaned_data['number'],part_id=int(part_id))
                     # print(part[0].id)
-                    input:Input=Input.objects.filter(work_order_number='14016/2').values_list('parts')
+                    input:DeviceInput=DeviceInput.objects.filter(work_order_number='14016/2').values_list('parts')
                     # input.parts.add(part[0])
                     print(input)
                     print(form.cleaned_data)
 
 
-class Storing(LoginRequiredMixin,RegistrarPermission,View):
+class Storing(LoginRequiredMixin,StoreKeeperPermission,View):
 
     def get(self, request):
         devices=Category.objects.all()
-        places=Place.objects.filter(update='no_update')
+        places=Place.objects.filter(storekeeper=request.user)
+        count_place=places.count()
+        if count_place == 1:
+            branchs=Branch.objects.filter(place__storekeeper=request.user)
+        else:
+            branchs=None
         form=AddDeviceForm(request.GET)
         context = {
             'devices':devices,
             'places':places,
-            'form':form
+            'form':form,
+            'count_place':count_place,
+            'branchs':branchs
         }
         return render(request, "device/form_add_device.html", context=context)
 
     def device_exists(self,serial:str) -> bool:
-        device: Input = Input.objects.filter(
+        device: DeviceInput = DeviceInput.objects.filter(
                 serial=serial
             ).exists()
         return device
@@ -351,38 +475,75 @@ class Storing(LoginRequiredMixin,RegistrarPermission,View):
     def status(self,serial) -> str:
         """return status device"""
         if self.device_exists(serial):
-            status=Input.objects.filter(serial=serial).values('status').last()
+            status=DeviceInput.objects.filter(serial=serial).values('status').last()
             return status.get('status')
-
-    def check_create_work_order_number(self) -> str:
-        """check filed work_order_number not null for create work_order_number"""
-        try:
-            last_object: Input = Input.objects.first()
-            last_work_orde_number = last_object.work_order_number
-        except AttributeError:
-            last_work_orde_number = None
-        work_order_number = create_work_order_number(last_work_orde_number)
-        return work_order_number
 
     def post(self, request):
         form = AddDeviceForm(request.POST)
+        if form.errors:
+            return JsonResponse(form.errors.get_json_data())
+            # return HttpResponse(form.errors.get_json_data())
         if form.is_valid():
             serial=convert_fa_numbers(form.cleaned_data.pop('serial')) 
-            if self.status(serial) == None or self.status(serial) == 'finished':
-                Input.objects.create(
+            if self.status(serial) == None or self.status(serial) == 'finished' or self.status(serial) == 'cancel':
+                DeviceInput.objects.create(
                 **form.cleaned_data,
-                    work_order_number=self.check_create_work_order_number(),
+                    # place=request.user.place,
+                    # work_order_number=self.check_create_work_order_number(),
                     serial=serial,
-                    transferee_operator=f'{request.user.first_name} {request.user.last_name}',
-                    entry_date=save_date_time(),
-                    status='ngoing'
+                    # transferee_operator=f'{request.user.first_name} {request.user.last_name}',
+                    request_date=save_date_time(),
+                    status='waiting'
                 )
                 return JsonResponse({'msg':'success'})
             else:
                 return JsonResponse({'msg':'error','status':self.status(serial)})
         return JsonResponse({'msg':'Notvalid'})
 
+def check_create_work_order_number() -> str:
+    """check filed work_order_number not null for create work_order_number"""
+    try:
+        last_object: DeviceInput = DeviceInput.objects.filter(~Q(work_order_number='',)).first()
+        print(last_object.work_order_number,'lastttttttttttt')
+        last_work_orde_number = last_object.work_order_number
+    except AttributeError:
+        last_work_orde_number = None
+    work_order_number = create_work_order_number(last_work_orde_number)
+    return work_order_number
 
+
+class DeviceNew(LoginRequiredMixin,RegistrarPermission,View):
+
+    def get(self,request):
+        devices=DeviceInput.objects.filter(status='waiting').order_by('-request_date')
+        # print(self.request.user.role)
+        return render(request,'device/device_new.html',context={'devices':devices})
+
+    def save(request):
+        device_id=request.GET.get('device_id')
+        print('gggggggggggg')
+        DeviceInput.objects.filter(id=device_id).update(
+            work_order_number=check_create_work_order_number(),
+            transferee_operator=f'{request.user.first_name} {request.user.last_name}',
+            entry_date=save_date_time(),
+            status='ngoing'
+        )
+        return JsonResponse({'msg':'success'})
+
+    def cancel(request):
+        device_id=request.GET.get('device_id')
+
+
+class DeviceWaiting(LoginRequiredMixin,StoreKeeperPermission,View):
+
+    def get(self,request):
+        devices=DeviceInput.objects.filter(status='waiting',place__storekeeper__username=request.user).order_by('-request_date')
+        return render(request,'device/user/waiting.html',context={'devices':devices})
+
+    def cancel(request):
+        device_id=request.GET.get('device_id')
+        DeviceInput.objects.get(id=device_id).delete()
+        return JsonResponse({'msg':'success'})
 
 class EditCategory(LoginRequiredMixin,RegistrarPermission,View):
     
@@ -395,14 +556,13 @@ class EditCategory(LoginRequiredMixin,RegistrarPermission,View):
 
     def response(self,message:str) -> json:
         if message == 'success':
-            print('suceee')
             return JsonResponse({'msg':'success'})
         elif message == 'exists':
-            print('oooooooooooo')
             return JsonResponse({'msg':'exists'})
         elif message == 'protectederror':
-            print('oooooooooooo')
             return JsonResponse({'msg':'protectederror'})
+        elif message == 'ObjectDoesNotExist':
+            return JsonResponse({'msg':'ObjectDoesNotExist'})
         else:
             return JsonResponse({'msg':'error'})
 
@@ -429,11 +589,11 @@ class EditCategory(LoginRequiredMixin,RegistrarPermission,View):
         form=CategoryForm(request.POST)
         print(form.errors)
         if form.is_valid():
+            print(form.cleaned_data)
             if 'add' in request.POST:
-                return self.create(name=form.cleaned_data.get('create_name'),queryset=Category)
+                return self.create(name=convert_fa_numbers(form.cleaned_data.get('create_name')),queryset=Category)
             if 'edit' in request.POST:
-                print('hhhhhhhhhhhhhhhh')
-                return self.update(queryset= form.cleaned_data.get('category'),name_new= form.cleaned_data.get('update_name'))
+                return self.update(queryset= form.cleaned_data.get('category'),name_new= convert_fa_numbers(form.cleaned_data.get('update_name')))
             if 'delete' in request.POST:
                 print(form.cleaned_data.get('category'))
                 return self.delete(form.cleaned_data.get('category'))
@@ -453,29 +613,30 @@ class EditBrandCategory(EditCategory):
         return BrandCategory.objects.filter(category__name=category,name=name).exists()
 
     def create(self,category,name):
+        category=Category.objects.get(name=category)
         if self.obj_exists(category,name):
             return self.response('exists')
         BrandCategory.objects.create(category=category,name=name)
         return self.response('success')
 
     def update(self, data:dict):
-        if self.obj_exists(category=data.get('hidden'),name=data.get('update_name')):
+        if self.obj_exists(category=data.get('hidden'),name=convert_fa_numbers(data.get('update_name'))):
             return self.response('exists')
-        data.get('brandcategory').update(name=data.get('update_name'))
+        data.get('brandcategory').update(name=convert_fa_numbers(data.get('update_name')))
         return self.response('success')
 
     def post(self,request):
             form=EditBrandCategoryForm(request.POST)
-            print(form.errors)
             if form.is_valid():
-                if 'add' in form.data:
-                    print('create_name',form.cleaned_data)
-                    return self.create(form.cleaned_data.get('hidden'),form.cleaned_data.get('create_name'))
-                if 'edit' in form.data:
-                    print('update_name',form.cleaned_data)
-                    return self.update(form.cleaned_data)
-                if 'delete' in form.data: 
-                    return self.delete(form.cleaned_data.get('brandcategory'))
+                try:
+                    if 'add' in form.data:
+                        return self.create(form.cleaned_data.get('hidden'),convert_fa_numbers(form.cleaned_data.get('create_name')))
+                    if 'edit' in form.data:
+                        return self.update(form.cleaned_data)
+                    if 'delete' in form.data: 
+                        return self.delete(form.cleaned_data.get('brandcategory'))
+                except ObjectDoesNotExist:
+                    return self.response('ObjectDoesNotExist')
             else:
                 return self.response('error')
 
@@ -489,7 +650,7 @@ class Ajax:
     def load_Branchs(request):
         place_name = request.GET.get('place_name')
         print(place_name,'kkkkkkkkkkkkkkkkkkkk')
-        branchs = Branch.objects.filter(place_id=place_name,update='no_update')
+        branchs = Branch.objects.filter(place_id=place_name)
         print(branchs.values('id', 'name'))
         return JsonResponse(list(branchs.values('id', 'name')), safe=False)
 
@@ -506,6 +667,7 @@ class EditParts(LoginRequiredMixin,RegistrarPermission,View):
     def get(self,request):
         category=Category.objects.all()
         parts=Part.objects.all()
+        print(parts)
         context={
             'category':category,
             'parts':parts
@@ -550,9 +712,17 @@ class EditParts(LoginRequiredMixin,RegistrarPermission,View):
         return JsonResponse({"msg": "success"})
 
     def post(self,request):
+        print(request.POST,'postttttttttttttt')
         form=EditPartsForm(request.POST)
         print(form.errors)
         if form.is_valid():
+            form.cleaned_data.update(
+                {
+                    'name':convert_fa_numbers(form.cleaned_data.get('name')),
+                    'brand':convert_fa_numbers(form.cleaned_data.get('brand'))
+                }
+            )
+            print(form.cleaned_data)
             if 'form_add' in form.data:
                 return self.create(form.cleaned_data)
             else:
@@ -561,10 +731,13 @@ class EditParts(LoginRequiredMixin,RegistrarPermission,View):
             return JsonResponse({"msg": "error"})
 
 
+
+
+
+
 class Chart(View):
 
     def get(self,request):
         return render(request,'device/chart.html')
-    
     
     

@@ -4,10 +4,15 @@ from .views import SeeAllDevice, \
      Storing,Ajax,EditCategory,\
         EditBrandCategory,EditStatus,EditParts,\
             DeviceNgoing,DeviceProvide,DevicePrint,\
-                DeviceRepairCity,DeviceUnrepairable,Chart
+                DeviceRepairCity,DeviceUnrepairable,Chart,DeviceNew,DeviceWaiting,PrintWorkOrder
 
 
 urlpatterns = [
+    path("print-work-order", PrintWorkOrder.as_view(), name="print-work-order"),
+    path("ajax-device-cancel", DeviceWaiting.cancel, name="ajax-device-cancel"),
+    path("waiting", DeviceWaiting.as_view(), name="device-waiting"),
+    path("ajax-save-device", DeviceNew.save, name="ajax-save-device"),
+    path("new/", DeviceNew.as_view(), name="device-new"),
     path("chart/", Chart.as_view(), name="device-chart"),
     path("unrepairable/", DeviceUnrepairable.as_view(), name="device-unrepairable"),
     path("print/", DevicePrint.as_view(), name="device-print"),

@@ -27,7 +27,7 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        {% if user.add or user.rol == 'adminstrator' %}
+                        {% if user.add or user.role == 'adminstrator' %}
                         <h2>  برای اضافه کردن برروی<button id='btn_add' type="button" class="btn btn-success" style="width: 13%;height: 50%;padding: 0.7% ; "  data-toggle="modal" data-target=".bs-example-modal-lg-add">افزودن</button> وبرای عملیات ویرایش و حذف هر ستون بر روی دکمه مربوطه کلیک کنید.
                         </h2>
                         {% else %}
@@ -65,17 +65,17 @@
                                 <td>{{forloop.counter}}</td>
                                 <td>{{place.name}}</td>
                                 <td>{{place.boss}}</td>
-                                <td>{{place.storekeeper}}</td>
+                                <td>{{place.storekeeper.first_name}} {{place.storekeeper.last_name}}</td>
                                 <td> 
-                            {% if user.edit or user.rol == 'adminstrator' %}
-                                <center><button id={{place.id}} type="button" class="btn btn-warning" style="height: 100%;padding: 0px;width: 17%; padding: 0.7%;"   data-toggle="modal" data-target=".bs-example-modal-lg">ویرایش</button>
+                            {% if user.edit or user.role == 'adminstrator' %}
+                                <center><button id={{place.id}} type="button" class="btn btn-warning" style="height: 30px;padding: 0px;width: 50px; padding: 0.7px;"   data-toggle="modal" data-target=".bs-example-modal-lg">ویرایش</button>
                             {% else %}
-                                <center><button id={{place.id}} type="button" class="btn btn-warning" style="height: 100%;padding: 0px;width: 17%; padding: 0.7%;"  data-toggle="modal" data-target=".bs-example-modal-lg" disabled="disabled" >ویرایش</button>
+                                <center><button id={{place.id}} type="button" class="btn btn-warning" style="height: 30px;padding: 0px;width: 50px; padding: 0.7px;"  data-toggle="modal" data-target=".bs-example-modal-lg" disabled="disabled" >ویرایش</button>
                             {% endif %}
-                            {% if user.delete or user.rol == 'adminstrator' %}            
-                                <button id={{place.id}} type="submit" class="btn btn-danger"  style="height: 100%;padding: 0px;width: 13%; padding: 0.7%;" data-toggle="modal" data-target=".bs-example-modal-sm" >حذف</button></center>
+                            {% if user.delete or user.role == 'adminstrator' %}            
+                                <button id={{place.id}} type="submit" class="btn btn-danger"  style="height: 30px;padding: 0px;width: 50px; padding: 0.7px;" data-toggle="modal" data-target=".bs-example-modal-sm" >حذف</button></center>
                             {% else %}
-                                <button id={{place.id}} type="submit" class="btn btn-danger"  style="height: 100%;padding: 0px;width: 13%; padding: 0.7%;" data-toggle="modal" data-target=".bs-example-modal-sm" disabled="disabled" >حذف</button></center>
+                                <button id={{place.id}} type="submit" class="btn btn-danger"  style="height: 30px;padding: 0px;width: 50px; padding: 0.7px;" data-toggle="modal" data-target=".bs-example-modal-sm" disabled="disabled" >حذف</button></center>
                             {% endif %}
                                 </td>
                             </tr>
@@ -110,19 +110,24 @@
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">نام</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text" class="form-control"  name="name" id="name">
+                                                                <input type="text" class="form-control" required="" name="name" id="name">
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">رئیس</label>
                                                             <div class="col-sm-9">
-                                                             <input type="text" class="form-control"  name="boss" id="boss">
+                                                             <input type="text" class="form-control" required="" name="boss" id="boss">
                                                             </div>
                                                         </div>
                                                               <div class="form-group">
                                                             <label class="col-sm-3 control-label">انباردار</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text" class="form-control"  name="storekeeper" id="storekeeper">
+                                                               <select id="SelectBranch" class="form-control" required=""  searchable="Search here.."  name="storekeeper">
+                                                                    <option value=''>انتخاب...</option>
+                                                                    {% for storekeeper in storekeepers %}
+                                                                        <option value={{storekeeper.id}}>{{storekeeper.first_name}} {{storekeeper.last_name}}-{{storekeeper.username}}</option>
+                                                                    {% endfor %} 
+                                                                </select>
                                                         </div>
                                                         </div>
                                                 </div>
@@ -154,21 +159,30 @@
                                                             <label class="col-sm-3 control-label">نام</label>
                                                             <div class="col-sm-9">
                                                             <input type='hidden' name='form_add'>
-                                                                <input type="text" class="form-control"  name="name" id="nam">
+                                                                <input type="text" class="form-control" required="" name="name" id="nam">
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">رئیس</label>
                                                             <div class="col-sm-9">
-                                                             <input type="text" class="form-control"  name="boss" id="bos">
+                                                             <input type="text" class="form-control" required="" name="boss" id="bos">
                                                             </div>
                                                         </div>
                                                              <div class="form-group">
                                                             <label class="col-sm-3 control-label">انباردار</label>
+
                                                             <div class="col-sm-9">
-                                                                <input type="text" class="form-control"  name="storekeeper" id="storekeepe">
+                                                                <select id="SelectBranch" class="form-control" required=""  searchable="Search here.."  name="storekeeper">
+                                                                    <option value=''>انتخاب...</option>
+                                                                    {% for storekeeper in storekeepers %}
+                                                                        <option value={{storekeeper.id}}>{{storekeeper.first_name}} {{storekeeper.last_name}}-{{storekeeper.username}}</option>
+                                                                    {% endfor %} 
+                                                                </select>
+                                                                {% comment %} <input type="text" class="form-control"  name="storekeeper" id="storekeepe"> {% endcomment %}
                                                         </div>
                                                         </div>
+
+                                                        
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
@@ -215,6 +229,10 @@
 
 
 {%endblock content%}   
+
+{% comment %} {% block validatorjs %}
+   <script src="{% static 'vendors/validator/validator.js' %}"></script>     
+{% endblock validatorjs %} {% endcomment %}
 {%block js %}
 
 <!-- Load data -->

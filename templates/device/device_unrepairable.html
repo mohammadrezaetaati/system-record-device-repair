@@ -49,13 +49,21 @@
                                 <th>شماره حکم کار</th>
                                 <th>شماره سریال/اموال</th>
                                 <th>نام و مدل</th>
+                            {% if user.role != 'storekeeper' %}
+
                                 <th > محل مورداستفاده</th>  
                                 <th> تلفن</th>
+                            {% endif %}
+
                                 <th>تحویل دهنده</th>
                                 <th>تحویل گیرنده</th>
                                 <th>زمان و تاریخ ورود</th>
                                 <th>زمان و تاریخ خروج</th>
+                            {% if user.role != 'storekeeper' %}
+
                                 <th>عملیات</th>
+                            {% endif %}
+
                                  <th >معایب</th>
                                  <th >توضیحات</th>
                             </tr>
@@ -66,16 +74,21 @@
                                 <td >{{field.work_order_number}}</td>
                                <a href=""> <td>{{field.serial}}</td></a> 
                                 <td>{{field.category}} - {{field.brand_category.name}}</td>  
+                            {% if user.role != 'storekeeper' %}
+
                                 <td>{{field.place.name}} - {{field.branch.name}}</td>
                                 <td>{{field.branch.phone}}</td>
+                            {% endif %}
+
                                 <td>{{field.delivery}}</td>
                                 <td>{{field.transferee_operator}}</td>
-                                <td>{{field.entry_date}}</td>
-                                <td>{{field.exit_date}}</td>
+                                <td>{{field.entry_date|date:"H:i Y-m-d"}}</td>
+                                <td>{{field.exit_date|date:"H:i Y-m-d"}}</td>
+                            {% if user.role != 'storekeeper' %}
 
                                 <td> 
                                    <div class="btn-group">
-                                    {% if user.change_status or user.rol == 'adminstrator' %}
+                                    {% if user.change_status or user.role == 'adminstrator' %}
                                         <button id={{field.id}} data-toggle="dropdown" class="btn btn-default dropdown-toggle btn btn-success"
                                                 type="button" style="height: 100%;padding: 0px;width: 102%; padding: 5%;"> تغییروضعیت <span class="caret"></span></button>
                                     {% else %}
@@ -92,17 +105,19 @@
                                     </ul>
                                 </div>
                                 
-                            {% if user.edit or user.rol == 'adminstrator' %}   
+                            {% if user.edit or user.role == 'adminstrator' %}   
                                 <button id={{field.id}} type="button" class="btn btn-warning" style="height: 100%;padding: 0px;width: 25%; padding: 1.5%;"  data-toggle="modal" data-target=".bs-example-modal-lg">ویرایش</button>
                             {% else %}
                                 <button id={{field.id}} type="button" class="btn btn-warning" style="height: 100%;padding: 0px;width: 25%; padding: 1.5%;"  data-toggle="modal" data-target=".bs-example-modal-lg" disabled="disabled" >ویرایش</button>
                             {% endif %}
-                            {% if user.delete or user.rol == 'adminstrator' %}            
+                            {% if user.delete or user.role == 'adminstrator' %}            
                                 <button id={{field.id}} type="submit" class="btn btn-danger"  style="height: 100%;padding: 0px;width: 25%; padding: 1.5%;" data-toggle="modal" data-target=".bs-example-modal-sm" >حذف</button>                       
                             {% else %}
                                 <button id={{field.id}} type="submit" class="btn btn-danger"  style="height: 100%;padding: 0px;width: 25%; padding: 1.5%;" data-toggle="modal" data-target=".bs-example-modal-sm" disabled="disabled" >حذف</button>                       
                             {% endif %}                        
                                  </td>
+                            {% endif %}
+
                                 <td>{{field.problem}}</td>
                                 <td>{{field.description}}</td>
 
@@ -135,7 +150,7 @@
                             {% include "device/models/ngoing.html" %}
 
                     <!-- /modals -->
-                    {
+                 
                     </div>
                 </div>
             </div>

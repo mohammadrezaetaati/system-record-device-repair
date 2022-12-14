@@ -40,17 +40,17 @@
                            
                           
                       <!-- <center> <button onclick="jQuery('#show').slideDown(500);"      >"Slideup"</button> -->
-                        {% if user.add or user.rol == 'adminstrator' %}
+                        {% if user.add or user.role == 'adminstrator' %}
                             <center> <button id="send"  class="btn btn-success" onclick="jQuery('#formAdd').slideDown(700);">افزودن</button>
                         {% else %}
                             <center> <button id="send"  class="btn btn-success" onclick="jQuery('#formAdd').slideDown(700);" disabled="disabled">افزودن</button>
                         {% endif %}
-                        {% if user.edit or user.rol == 'adminstrator' %}
+                        {% if user.edit or user.role == 'adminstrator' %}
                             <button id="send" type="submit" class="btn btn-warning" onclick="jQuery('#formedit').slideDown(700);">ویرایش</button>
                         {% else %}
                             <button id="send" type="submit" class="btn btn-warning" onclick="jQuery('#formedit').slideDown(700);" disabled="disabled" >ویرایش</button>
                         {% endif %}
-                        {% if user.delete or user.rol == 'adminstrator' %}
+                        {% if user.delete or user.role == 'adminstrator' %}
                             <button id="send" type="submit" class="btn btn-danger" onclick="jQuery('#formDelete').slideDown(700);">حذف</button></center> 
                         {% else %}
                             <button id="send" type="submit" class="btn btn-danger" onclick="jQuery('#formDelete').slideDown(700);" disabled="disabled" >حذف</button></center> 
@@ -58,7 +58,7 @@
                             <div class="ln_solid" ></div>
                     <div>
 
-                         <form id="formAdd" class="form-horizontal form-label-left" novalidate method="post" style="display: none;" >
+                         <form id="formAdd" class="form-horizontal form-label-left"  method="post" style="display: none;" >
                             {% csrf_token %}
                             {% comment %} <span class="section"> ویرایش</span> {% endcomment %}
                             {% if error %}
@@ -70,8 +70,8 @@
                             </div>
                             <input type="hidden" name="add">
                         <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">نام<span
-                                        class="required">*</span>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">دسته:<span
+                                        class="required"></span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input id="textarea" required="required" name="create_name"
@@ -86,7 +86,7 @@
                             </div>
                         </form>
                             <div class="ln_solid"></div>
-                           <form id="formedit" class="form-horizontal form-label-left" novalidate method="post" style="display: none;" >
+                           <form id="formedit" class="form-horizontal form-label-left"  method="post" style="display: none;" >
                             {% csrf_token %}
                             {% comment %} <span class="section"> ویرایش</span> {% endcomment %}
                             {% if error %}
@@ -97,8 +97,8 @@
                             <div class="item form-group" >
                             </div>
                             <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">نام دسته<span
-                                        class="required">*</span>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">نام دسته:<span
+                                        class="required"></span>
                                 </label>
                                 <input type="hidden" name="edit">
                                 <div class="col-md-6 col-sm-6 col-xs-12"  id="show" >
@@ -111,11 +111,11 @@
                                 </div>
                                 </div>
                         <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea"> نام جدید<span
-                                        class="required">*</span>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea"> نام جدید:<span
+                                        class="required"></span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input id="textarea" required="required" name="update_name"
+                                    <input id="textarea" required="" name="update_name"
                                               class="form-control col-md-7 col-xs-12"></textarea>
                                 </div>
                             </div>
@@ -127,7 +127,7 @@
                             </div>
                         </form>
                             <div class="ln_solid"></div>
-                           <form id="formDelete" class="form-horizontal form-label-left" novalidate method="post" style="display: none;" >
+                           <form id="formDelete" class="form-horizontal form-label-left"  method="post" style="display: none;" >
                             {% csrf_token %}
                           {% comment %} <span class="section"> باحذف یک دسته </span> {% endcomment %}
                           
@@ -135,11 +135,11 @@
                             </div>
                             <input type="hidden" name="delete">
                         <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">نام<span
-                                        class="required">*</span>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">دسته:<span
+                                        class="required"></span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select id="SelectCategory" class="select2_multiple form-control" multiple="multiple"  name="category">
+                                    <select id="SelectCategory" class="select2_multiple form-control" required="" multiple="multiple"  name="category">
                                         <option value=''>انتخاب...</option>
                                        {% for cat in category %}
                                            <option value={{cat.id}}>{{cat.name}}</option>

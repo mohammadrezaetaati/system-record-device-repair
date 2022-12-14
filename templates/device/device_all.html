@@ -85,7 +85,7 @@
                                             <td>{{field.place.name}}-{{field.branch.name}}</td>
                                             <td>{{field.place.boss}}</td>
                                             <td>{{field.branch.boss}}</td>
-                                            <td>{{field.place.storekeeper}}</td>  
+                                            <td>{{field.place.storekeeper.first_name}} {{field.place.storekeeper.last_name}}</td>  
                                             <td>{{field.branch.phone}}</td>
                                             <td>{{field.delivery}}</td>
                                             <td>{{field.transferee_operator}}</td>
@@ -104,9 +104,9 @@
                                                 <p style="color:red ;">دردست اقدام</p>
                                             {% endif %}
                                             </td>
-                                            <td>{{field.entry_date}}</td>
-                                            <td>{{field.provide_date}}</td>
-                                            <td>{{field.exit_date}}</td>
+                                            <td>{{field.entry_date|date:"H:i Y-m-d"}}</td>
+                                            <td>{{field.provide_date|date:"H:i Y-m-d"}}</td>
+                                            <td>{{field.exit_date|date:"H:i Y-m-d"}}</td>
                                             <td>{{field.seal_number}}</td>
 
                                             <td>{{field.problem}}</td>

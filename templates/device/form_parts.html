@@ -29,7 +29,7 @@
             <div class="col-md-12 col-sm-12 col-xs-12" >
                 <div class="x_panel">
                     <div class="x_title">
-                    {% if user.add or user.rol == 'adminstrator' %}
+                    {% if user.add or user.role == 'adminstrator' %}
                         <h2>  برای اضافه کردن برروی<button id='btn_add' type="button" class="btn btn-success" style="width: 13%;height: 50%;padding: 0.7% ; " data-toggle="modal" data-target=".bs-example-modal-lg-add">افزودن</button> وبرای عملیات ویرایش و حذف هر ستون بر روی دکمه مربوطه کلیک کنید.
                             <small></small>
                         </h2>
@@ -72,16 +72,16 @@
                                 <td>{{part.brand}}</td>
                                 
                                 <td> 
-                            {% if user.edit or user.rol == 'adminstrator' %}
-                                <center><button id={{part.id}} type="button" class="btn btn-warning" style="height: 100%;padding: 0px;width: 17%; padding: 0.7%;"  data-toggle="modal" data-target=".bs-example-modal-lg">ویرایش</button>
+                            {% if user.edit or user.role == 'adminstrator' %}
+                                <center><button id={{part.id}} type="button" class="btn btn-warning" style="height: 30px;padding: 0px;width: 50px; padding: 0.7px;"  data-toggle="modal" data-target=".bs-example-modal-lg">ویرایش</button>
                             {% else %}
-                                <center><button id={{part.id}} type="button" class="btn btn-warning" style="height: 100%;padding: 0px;width: 17%; padding: 0.7%;" data-toggle="modal" data-target=".bs-example-modal-lg" disabled="disabled">ویرایش</button>
+                                <center><button id={{part.id}} type="button" class="btn btn-warning" style="height: 30px;padding: 0px;width: 50px; padding: 0.7px;" data-toggle="modal" data-target=".bs-example-modal-lg" disabled="disabled">ویرایش</button>
 
                             {% endif %}
-                            {% if user.delete or user.rol == 'adminstrator' %}
-                                <button id={{part.id}} type="submit" class="btn btn-danger"  style="height: 100%;padding: 0px;width: 13%; padding: 0.7%;" data-toggle="modal" data-target=".bs-example-modal-sm" >حذف</button></center>
+                            {% if user.delete or user.role == 'adminstrator' %}
+                                <button id={{part.id}} type="submit" class="btn btn-danger"  style="height: 30px;padding: 0px;width: 50px; padding: 0.7px;" data-toggle="modal" data-target=".bs-example-modal-sm" >حذف</button></center>
                             {% else %}
-                                <button id={{part.id}} type="submit" class="btn btn-danger"  style="height: 100%;padding: 0px;width: 13%; padding: 0.7%;" data-toggle="modal" data-target=".bs-example-modal-sm" disabled="disabled" >حذف</button></center>
+                                <button id={{part.id}} type="submit" class="btn btn-danger"  style="height: 30px;padding: 0px;width: 50px; padding: 0.7px;" data-toggle="modal" data-target=".bs-example-modal-sm" disabled="disabled" >حذف</button></center>
                             {% endif %}
                             
                                 </td>
@@ -120,7 +120,7 @@
                                                             <label class="col-sm-3 control-label">دسته</label>
                                                             <div class="col-sm-9">
                                                                 <select  class="form-control" required=""  searchable="Search here.."  name="category">
-                                                                <option >انتخاب...</option>
+                                                                <option value='' >انتخاب...</option>
                                                                 {% for cat in category %}
                                                                 <option value={{cat.id}}>{{cat.name}}</option> 
                                                                 {% endfor %}       
@@ -130,13 +130,13 @@
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">نام قطعه</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text" class="form-control"  name="name" id="name">
+                                                                <input type="text" class="form-control" required="" name="name" id="name">
                                                         </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">مدل</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text" class="form-control"  name="brand" id="brand">
+                                                                <input type="text" class="form-control" required="" name="brand" id="brand">
                                                         </div>
                                                         </div>
                                                         
@@ -170,7 +170,7 @@
                                                             <div class="col-sm-9">
                                                             <input type='hidden' name='form_add'>
                                                                 <select  class="form-control" required=""  searchable="Search here.."  name="category">
-                                                                <option >انتخاب...</option>
+                                                                <option value='' >انتخاب...</option>
                                                                 {% for cate in category %}
                                                                     <option value={{cate.id}}>{{cate.name}}</option>
                                                                 {% endfor %}       
@@ -180,13 +180,13 @@
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">نام قطعه</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text" class="form-control"  name="name" id="nam">
+                                                                <input type="text" class="form-control" required="" name="name" id="nam">
                                                         </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="col-sm-3 control-label">مدل</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text" class="form-control"  name="brand" id="bos">
+                                                                <input type="text" class="form-control" required=""  name="brand" id="bos">
                                                         </div>
                                                         </div>
                                                   

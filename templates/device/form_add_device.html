@@ -40,14 +40,14 @@
                     </div>
                     <div class="x_content">
 
-                        <form id='formAdd' class="form-horizontal form-label-left" novalidate method="post"  data-branchs-url="{% url 'ajax_load_branchs' %}" data-brands-category-url="{% url 'ajax_load_brands-category' %}">
+                        <form id='formAdd' class="form-horizontal form-label-left"  method="post"  data-branchs-url="{% url 'ajax_load_branchs' %}" data-brands-category-url="{% url 'ajax_load_brands-category' %}">
                             {% csrf_token %}
                        
 
                             {% comment %} <span class="section">اطلاعات شخصی</span> {% endcomment %}
                  
                              <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="occupation">شماره سریال/ اموال 
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="occupation">شماره اموال 
                                     <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -57,15 +57,19 @@
                                     required="required" type="text">
                                            
                                 </div>
+                                <div id='serial-invalid' style="display:none ;">
+                                   <p style="color: red;"> به درستی وارد نشده</p> 
+                                </div>
                             </div>
 
                             <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">دسته<span
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">دستگاه<span
                                         class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                      <select id="SelectCategory" class="form-control" required=""  searchable="Search here.."  name="category">
                                      <option value=''>انتخاب...</option>
+                                     
                                     {% for device in devices %}
                                         <option value={{device.name}}>{{device.name}}</option>
                                     {% endfor %}      
@@ -90,66 +94,96 @@
                                 </div>
                             
                             </div>
-                            <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">محل مورداستفاده <span
-                                        class="required">*</span>
-                                </label>
-                                  <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select id="SelectPlace" class="form-control" required=""  searchable="Search here.."  name="place" >
-                                        <option value=''>انتخاب...</option>
-                                        {% for place in places %}
-                                            <option value={{place.id}}>{{place.name}}</option>
-                                        {% endfor %}       
-                                    </select>
-                                    
+                            {% if count_place > 1 %}
+                                <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">محل مورداستفاده <span
+                                            class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <select id="SelectPlace" class="form-control" required=""  searchable="Search here.."  name="place" >
+                                            <option value=''>انتخاب...</option>
+                                            {% for place in places %}
+                                                <option value={{place.id}}>{{place.name}}</option>
+                                              {% endfor %}     
+                                        </select>
+                                        
+                                    </div>
+                                </div> 
+                                <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">قسمت<span
+                                            class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <select id="SelectBranch" class="form-control" required=""  searchable="Search here.."  name="branch">
+                                            <option value=''>انتخاب...</option>
+                                            {% comment %} {% for branch in branchs %}
+                                                <option value={{branch.id}}>{{branch.name}}</option>
+                                            {% endfor %}  {% endcomment %}
+                                        </select>
+                                        
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">قسمت<span
-                                        class="required">*</span>
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                     <select id="SelectBranch" class="form-control" required=""  searchable="Search here.."  name="branch">
-                                        <option value=''>انتخاب...</option>
-                                    </select>
-                                    
+                           {% else %}
+                                <select id="SelectPlace" class="form-control" required=""  searchable="Search here.."  name="place" style='display: none;'>
+                                {% for place in places %}
+                                       <option value={{place.id}}>{{place.name}}</option>
+                                {% endfor %}
+                                </select>
+                                      <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">قسمت<span
+                                            class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <select id="SelectBranch" class="form-control" required=""  searchable="Search here.."  name="branch">
+                                            <option value=''>انتخاب...</option>
+                                            {% for branch in branchs %}
+                                                <option value={{branch.id}}>{{branch.name}}</option>
+                                            {% endfor %}  
+                                        </select>
+                                        
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="item form-group">
+                            {% endif %}
+                      
+                        
+                             <div class="item form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="occupation">تحویل دهنده 
                                     <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input id="name" class="form-control col-md-7 col-xs-12" 
+                                    <input id="delivery" class="form-control col-md-7 col-xs-12" 
                                     
                                     name="delivery" 
                                     required="required" type="text">
                                            
                                 </div>
                                 
-                               {% if form.errors == 'This field is required.'%}
-                               <ul class="parsley-errors-list filled" id="parsley-id-7"><li class="parsley-required">این مقدار باید وارد شود</li></ul>
-                               {% endif %}
+                                <div id='delivery-max_length' style="display:none ;">
+                                    <p style="color: red;">به درستی وارد نشده</p> 
+                                 </div>
                                 
-                            </div>
+                            </div> 
                             <div class="item form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">معایب  <span
                                         class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <textarea id="textarea" required="required" name="problem"
+                                    <textarea id="problem" required="required" name="problem"
                                               class="form-control col-md-7 col-xs-12"></textarea>
                                 </div>
+                                <div id='problem-max_length' style="display:none ;">
+                                    <p style="color: red;">حداکثر ۲۵۵ کلمه</p> 
+                                 </div>
                             </div>
                             <div class="ln_solid"></div>
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-3">
-                                {% if user.add or user.rol == 'adminstrator' %}
+                                {% comment %} {% if user.add or user.role == 'adminstrator' or user.role == 'requester'%} {% endcomment %}
                                     <button id="send" type="submit" class="btn btn-success">ثبت</button>
-                                {%else%}
+                                {% comment %} {%else%}
                                     <button id="send" type="submit" class="btn btn-success" disabled='disable'>ثبت</button>
 
-                                {%endif%}
+                                {%endif%} {% endcomment %}
                                 </div>
                             </div>
                        
@@ -163,7 +197,7 @@
 
 <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
 <!-- <script type="text/javascript" src="{%static 'vendors/jquery/jquery.js' %}"></script> -->
-<script>
+ <script>
     $("#SelectPlace").change(function () {
         const url = $("#formAdd").attr("data-branchs-url");  
         const placeName = $(this).val();  
@@ -184,9 +218,9 @@
         });
 
     });
-</script>      
+</script>       
 
-<script>
+ <script>
     $("#SelectCategory").change(function () {
         const url = $("#formAdd").attr("data-brands-category-url"); 
         const categoryName = $(this).val();  
@@ -208,10 +242,10 @@
         });
 
     });
-</script> 
+</script>  
+
 
 {% block js %}
-
 
 <script type="text/javascript">
     const formed = document.getElementById('formAdd');
@@ -227,11 +261,45 @@
             cache: false,
             csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
             success:function (data){
+                document.getElementById('serial-invalid').style.display='none'
+                document.getElementById('problem-max_length').style.display = 'none'
+                document.getElementById('delivery-max_length').style.display = 'none'
+                document.getElementById('serial').style.borderColor=' rgb(199, 186, 186)'
+                document.getElementById('problem').style.borderColor=' rgb(199, 186, 186)'
+                document.getElementById('delivery').style.borderColor=' rgb(199, 186, 186)'
+                if (data.serial){
+                    data.serial.forEach(function(msg){
+                        if (msg.code == 'invalid'){
+                            document.getElementById('serial-invalid').style.display='block'
+                            document.getElementById('serial').style.borderColor='red'
+
+                        }   
+                    })  
+                }
+
+                if(data.problem){
+                    data.problem.forEach(function(msg){
+                        if (msg.code == 'max_length'){
+                            document.getElementById('problem-max_length').style.display = 'block'
+                            document.getElementById('problem').style.borderColor='red'
+
+
+                        } 
+                    })
+                }
+
+                if (data.delivery){
+                    data.delivery.forEach(function(msg){
+                        if (msg.code == 'invalid'){
+                            document.getElementById('delivery-max_length').style.display = 'block'
+                            document.getElementById('delivery').style.borderColor='red'
+
+                        }
+                    })
+                }
                    if (data.msg == 'success'){
-                    {% comment %} $("#myModel").modal('hide'); {% endcomment %}
-                    alert('باموفقیت ثبت شد.')
+                    alert('حکم کار ثبت شد. برای انجام اقدامات لازم دستگاه را به تعمیرگاه فاوا انتقال دهید.')
                     formed.reset()
-                  
                 } else if (data.msg == 'error'){ 
                     if(data.status == 'ngoing'){
                         alert('این دستگاه دردست اقدام می باشد! امکان ثبت مجدد آن وجودندارد!')
@@ -244,6 +312,9 @@
                     }
                     if(data.status == 'unrepairable'){
                         alert('این دستگاه دروضعیت غیرقابل تعمیر می باشد! امکان ثبت مجدد آن وجودندارد!')
+                    }
+                    if(data.status == 'waiting'){
+                        alert('این دستگاه ثبت شده است لطفا آن را به تعمیرگاه فاوا انتفال دهید! امکان ثبت مجدد آن وجودندارد!')
                     }
                 }
             },
